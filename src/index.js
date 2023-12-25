@@ -1,13 +1,15 @@
-const http = require('http')
+const http = require('http');
+require('dotenv').config();
 
-const port = 5000;
-const hostname = 'localhost';
+const { handleRequest } = require('./router.js');
+const PORT = 5000;
+const HOSTNAME = 'localhost';
 
-server = http.createServer(function (req, res) { 
-  res.writeHead(200, {'Content-Type': 'text/plain'});
-  res.end('Testing');
+const server = http.createServer(handleRequest).listen(PORT,HOSTNAME);
+
+server.on('error', err => {
+    console.error(err);
+    server.close();
 });
 
-server.listen(port, hostname, () => {
-    console.log(`Server running at http://${hostname}:${port}/`);
-});
+
