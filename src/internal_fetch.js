@@ -4,10 +4,13 @@ const LON = '23.870';
 const WEATHERAPIKEY = process.env.WKEY;
 const WEATHERAPIURL = `https://api.openweathermap.org/data/2.5/weather?lat=${LAT}&lon=${LON}&appid=${WEATHERAPIKEY}&lang=fi&units=metric`;
 const DIGITRANSITAPIKEY = process.env.DKEY;
-const allowedOrigins = ['http://locgalhost']; //replace with production domain!
+const allowedOrigins = ['http://localhost']; //replace with production domain!
+
+const puppeteer = require('puppeteer');
   
 async function fetchWeatherData(res, req){
-    if (!checkOrigin(req)) return;
+    
+    //if (!checkOrigin(req,res)) return;
     let response = await fetch(WEATHERAPIURL);
     let weatherData = await response.json();
     const temp = weatherData.main.temp
@@ -29,8 +32,10 @@ async function fetchWeatherData(res, req){
     res.end()
 }
 
-function checkOrigin(req){
-    const requestOrigin = req.headers.origin;
+/*
+function checkOrigin(req,res){
+    const requestOrigin = req.headers['Origin'];
+    console.log(requestOrigin)
     if(!allowedOrigins.includes(requestOrigin)){
         res.writeHead(403);
         res.write("Access outside the domain is not allowed");
@@ -38,10 +43,36 @@ function checkOrigin(req){
         return false;
     }
     return true;
-}
+}*/
 
 async function getStopData(res,req){
-    if (!checkOrigin(req)) return;
+
+(async () => {
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+
+    await page.goto('https://www.paivyri.fi/info/nimipaivat/');
+    
+    await page.waitForSelector('.cent_text');
+    
+    const names = await page.$$eval('p.cent_text', paragraphs => {
+            const finnishCal = paragraphs[0].querySelectorAll('a');
+            const swedishCal = paragraphs[1].querySelectorAll('a');
+            const finnishNames = Array.from(finnishCal).map(name => name.textContent.trim());
+            const swedishNames = Array.from(swedishCal).map(name => name.textContent.trim());
+            const scrapedNames = [finnishNames, swedishNames];
+            return scrapedNames;
+        
+    });
+
+    console.log(names);
+    await browser.close();
+})();
+
+
+
+
+    //if (!checkOrigin(req,res)) return;
     const dataToSend = {
         query: `{
             stop(id: "MATKA:3_0811") {
@@ -70,8 +101,8 @@ async function getStopData(res,req){
         },
         body: JSON.stringify(dataToSend)
     })
+
     let received = await data3.json();
-    console.log(received)
     let nextComer = received.data.stop.stoptimesWithoutPatterns[0];
     let tramData = {};
     
