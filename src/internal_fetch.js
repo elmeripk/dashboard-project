@@ -45,37 +45,33 @@ function checkOrigin(req,res){
     return true;
 }*/
 
-async function getStopData(res,req){
-
-(async () => {
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-
-    await page.goto('https://www.paivyri.fi/info/nimipaivat/');
-    
-    await page.waitForSelector('.cent_text');
-    
-    const names = await page.$$eval('p.cent_text', paragraphs => {
-            const finnishCal = paragraphs[0].querySelectorAll('a');
-            const swedishCal = paragraphs[1].querySelectorAll('a');
-            const finnishNames = Array.from(finnishCal).map(name => name.textContent.trim());
-            const swedishNames = Array.from(swedishCal).map(name => name.textContent.trim());
-            const scrapedNames = [finnishNames, swedishNames];
-            return scrapedNames;
-        
-    });
-
-    console.log(names);
-    await browser.close();
-})();
+async function fetchStopData(res,req){
 
 
-
+    const parseBodyJson = req => {
+        return new Promise((resolve, reject) => {
+          let body = '';
+      
+          req.on('error', err => reject(err));
+      
+          req.on('data', chunk => {
+            body += chunk.toString();
+          });
+      
+          req.on('end', () => {
+            resolve(JSON.parse(body));
+          });
+        });
+      };
 
     //if (!checkOrigin(req,res)) return;
+    let body = await parseBodyJson(req);
+    let stop = body.stop
+    let transportDest = body.destination;
+
     const dataToSend = {
         query: `{
-            stop(id: "MATKA:3_0811") {
+            stop(id: "${stop}") {
                 name
                 stoptimesWithoutPatterns {
                 scheduledArrival
@@ -101,23 +97,59 @@ async function getStopData(res,req){
         },
         body: JSON.stringify(dataToSend)
     })
-
     let received = await data3.json();
-    let nextComer = received.data.stop.stoptimesWithoutPatterns[0];
-    let tramData = {};
-    
-    if(!nextComer){
-        res.writeHead(200,{'Content-Type': 'application/json'});
-        res.write(JSON.stringify(tramData));
+    const allTransports = received.data.stop.stoptimesWithoutPatterns;
+    if(!allTransports){
+        res.writeHead(404,{'Content-Type': 'application/json'});
+        res.write("No trams that we know of");
         res.end();
         return;
     }
+    const nextTransport = allTransports.find((tram) => tram.headsign === transportDest);
+    const transportDataToSend = constructTramData(nextTransport);
+    res.writeHead(200,{'Content-Type': 'application/json'});
+    res.write(JSON.stringify(transportDataToSend));
+    res.end();
+}
 
-    let time = nextComer.realtimeArrival;
-    let day = nextComer.serviceDay;
+async function fetchNameDayData(){
+
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+
+    await page.goto('https://www.paivyri.fi/info/nimipaivat/');
+    //Wait for elements to load
+    await page.waitForSelector('.cent_text');
+    
+    const names = await page.$$eval('p.cent_text', paragraphs => {
+            const finnishCal = paragraphs[0].querySelectorAll('a');
+            const swedishCal = paragraphs[1].querySelectorAll('a');
+            const finnishNames = Array.from(finnishCal).map(name => name.textContent.trim());
+            const swedishNames = Array.from(swedishCal).map(name => name.textContent.trim());
+            const scrapedNames = [finnishNames, swedishNames];
+            return scrapedNames;   
+    });
+
+    await browser.close();
+};
+
+function constructTramData(tramInfo){
+    if (tramInfo === undefined){
+        return null
+    }
+
+    let time = tramInfo.realtimeArrival;
+    let day = tramInfo.serviceDay;
     let realTime = time+day
     let date = new Date(realTime * 1000);
     let timeAsLocal = date.toLocaleString('fi-FI');
+
+    const tramData = { destination : tramInfo.headsign,
+                       arrivalTime : `${date.getHours()}:${date.getMinutes()}`,
+                       arrivalDay : `${date.getDate()}.${date.getMonth()+1}`
+                     };
+    return tramData;
 }
 
-module.exports = {fetchWeatherData, getStopData};
+
+module.exports = {fetchWeatherData, fetchStopData, fetchNameDayData};

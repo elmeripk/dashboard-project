@@ -1,6 +1,6 @@
 const URL = require('url');
 const fs = require('fs')
-const {fetchWeatherData, getStopData} = require ('./internal_fetch.js');
+const {fetchWeatherData, fetchStopData} = require ('./internal_fetch.js');
 
 
 const allowedMethods = {
@@ -22,13 +22,15 @@ function handleRequest(req,res){
         htmlFile = fs.readFileSync('../public/dashboard.html');
         res.writeHead(200, { 'Content-Type':'text/html'})
         res.write(htmlFile);
-    }else if(url.endsWith('scripts.js')){
+    }else if (url.endsWith('scripts.js')){
         let jsFile = fs.readFileSync('../public/scripts.js');
         res.writeHead(200, {'Content-Type':'text/javascript'});
         res.write(jsFile);
-    }else if(url === '/weather-data'){
-        //fetchWeatherData(res);
-        getStopData(res,req);
+    }else if (url === '/weather-data'){
+        fetchWeatherData(res);
+        return;
+    }else if (url === '/stop-data'){
+        fetchStopData(res,req);
         return;
     }else{
         res.writeHead(404, { 'Content-Type': 'text/plain' });
