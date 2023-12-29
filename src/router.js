@@ -1,6 +1,6 @@
 const URL = require('url');
 const fs = require('fs')
-const {fetchWeatherData, fetchStopData} = require ('./internal_fetch.js');
+const {fetchWeatherData, fetchStopData} = require ('./utils/internal_fetch.js');
 
 
 const allowedMethods = {

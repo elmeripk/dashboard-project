@@ -1,4 +1,5 @@
 require('dotenv').config({path: '../.env'});
+const {parseRequestBody} = require('./request_utils');
 const LAT = '61.607';
 const LON = '23.870';
 const WEATHERAPIKEY = process.env.WKEY;
@@ -47,69 +48,70 @@ function checkOrigin(req,res){
 
 async function fetchStopData(res,req){
 
+    try {
+        const bodyData = await parseRequestBody(req);
+        let stop = bodyData.stop
+        let transportDest = bodyData.destination;
 
-    const parseBodyJson = req => {
-        return new Promise((resolve, reject) => {
-          let body = '';
-      
-          req.on('error', err => reject(err));
-      
-          req.on('data', chunk => {
-            body += chunk.toString();
-          });
-      
-          req.on('end', () => {
-            resolve(JSON.parse(body));
-          });
-        });
-      };
+        const dataToSend = {
+            query: `{
+                stop(id: "${stop}") {
+                    name
+                    stoptimesWithoutPatterns {
+                    scheduledArrival
+                    realtimeArrival
+                    arrivalDelay
+                    scheduledDeparture
+                    realtimeDeparture
+                    departureDelay
+                    realtime
+                    realtimeState
+                    serviceDay
+                    headsign
+                }
+            }
+        }`
+        }
+
+        const apiRes = await fetch('https://api.digitransit.fi/routing/v1/routers/finland/index/graphql', {
+            method:"POST",
+            headers:{
+                "Content-Type": "application/json",
+                "digitransit-subscription-key": DIGITRANSITAPIKEY
+            },
+            body: JSON.stringify(dataToSend)
+        })
+
+        if(!apiRes) {
+            res.writeHead(apiRes.status, {'Content-Type' : 'text/plain'});
+            res.write('There was an error getting data from the API');
+            res.end();
+        }
+
+        const received = await data3.json();
+        const allTransports = received.data.stop.stoptimesWithoutPatterns;
+        //If the API provides no transports
+        if(!allTransports){
+            res.writeHead(404,{'Content-Type': 'application/json'});
+            res.write("No trams that we know of");
+            res.end();
+            return;
+        }
+        const nextTransport = allTransports.find((tram) => tram.headsign === transportDest);
+        const transportDataToSend = constructTramData(nextTransport);
+        res.writeHead(200,{'Content-Type': 'application/json'});
+        res.write(JSON.stringify(transportDataToSend));
+        res.end();
+        
+    } catch (error) {
+        // Handle errors here
+        res.writeHead(400, {'Content-Type':'text/plain'});
+        res.write("There was an error reading the request data");
+        res.end();
+    }  
 
     //if (!checkOrigin(req,res)) return;
-    let body = await parseBodyJson(req);
-    let stop = body.stop
-    let transportDest = body.destination;
-
-    const dataToSend = {
-        query: `{
-            stop(id: "${stop}") {
-                name
-                stoptimesWithoutPatterns {
-                scheduledArrival
-                realtimeArrival
-                arrivalDelay
-                scheduledDeparture
-                realtimeDeparture
-                departureDelay
-                realtime
-                realtimeState
-                serviceDay
-                headsign
-            }
-        }
-      }`
-    }
-
-    data3 = await fetch('https://api.digitransit.fi/routing/v1/routers/finland/index/graphql', {
-        method:"POST",
-        headers:{
-            "Content-Type": "application/json",
-            "digitransit-subscription-key": DIGITRANSITAPIKEY
-        },
-        body: JSON.stringify(dataToSend)
-    })
-    let received = await data3.json();
-    const allTransports = received.data.stop.stoptimesWithoutPatterns;
-    if(!allTransports){
-        res.writeHead(404,{'Content-Type': 'application/json'});
-        res.write("No trams that we know of");
-        res.end();
-        return;
-    }
-    const nextTransport = allTransports.find((tram) => tram.headsign === transportDest);
-    const transportDataToSend = constructTramData(nextTransport);
-    res.writeHead(200,{'Content-Type': 'application/json'});
-    res.write(JSON.stringify(transportDataToSend));
-    res.end();
+    
 }
 
 async function fetchNameDayData(){
