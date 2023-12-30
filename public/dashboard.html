@@ -4,10 +4,64 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="scripts.js"></script>
+    <link rel="stylesheet" href="css/dashboard.css">
+    
 </head>
 <body>
-    <h1>Dashboard</h1>
+    
+    <div id="dashboard">
+        <h1 id="clock"></h1>
+        <div id="parent-div">
+            <div id="date"></div>
+            <div id="weather">
+                <h2>Tampereen sää tänään</h2>
+                <div id="weather-separator">
+                    <div id="weather-icon-container">
+                        <div id="icon-wrapper"><img id="weather-icon"></div>
+                        <div id="temperature">Inf</div>
+                    </div>
+                    
+                <div id="weather-details">
+                        <p id="sunrise">NULL</p>
+                        <p id="sunset">NULL</p>
+                        <p id="winspeed">NULL</p>
+                    </div>
+                </div>
+            </div>
+            <div id="names">
+                <h2>Tänään nimipäiväänsä viettävät</h2>
+                <div id="name-separator">
+                    <div class="name-container" id="finnish">
+                        <h3>Suomalaisen kalenterin mukaan</h3>
+                        <p id="finnish-names">NULL</p>
+                    </div>
+                    <div class = "name-container" id="swedish">
+                        <h3>Ruotsalaisen kalenterin mukaan</h3>
+                        <p id="swedish-names">NULL</p>
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div id="trams">
+                <h2>Seuraavat raitiovaunut</h2>
+                <div id="container-separator">
+                <div class = "name-container" id="central">
+                    <h2>Tulli A</h2>
+                    <div class="tram-container" id="first"></div>
+                    <div class ="tram-container" id ="second"></div>
+                </div>
+                <div class = "name-container" id="outwards">
+                    <h2>Tulli B</h2>
+                    <div class ="tram-container" id="third"></div>
+                    <div class ="tram-container" id="fourth"></div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
 </body>
+<footer>
+    <script src="js/dashboard.js"></script>
+</footer>
 </html>

@@ -1,5 +1,4 @@
 function parseRequestBody(req) {
-    
     return new Promise((resolve, reject) => {
         let body = '';
   
@@ -8,9 +7,15 @@ function parseRequestBody(req) {
         req.on('data', chunk => {
             body += chunk.toString();
             });
-  
+        
         req.on('end', () => {
-            resolve(JSON.parse(body));
+            try{
+                resolve(JSON.parse(body));
+            }catch(err){
+                reject(err);
+            }
         });
     });
   };
+
+  module.exports = {parseRequestBody};

@@ -1,43 +1,26 @@
-const URL = require('url');
+const {URL} = require('url');
 const fs = require('fs')
-const {fetchWeatherData, fetchStopData} = require ('./utils/internal_fetch.js');
-
-
-const allowedMethods = {
-    '/api/register': ['POST'],
-    '/api/users': ['GET'],
-    '/api/products': ['GET']
-  };
+const {fetchWeatherData, fetchStopData, fetchNameDayData} = require ('./utils/internal_fetch.js');
+const {serveStatic} = require ('./utils/response_utils.js');
+const HOMEPAGE = 'index.html';
 
 function handleRequest(req,res){
 
     const { url, method, headers } = req;
-    let htmlFile;
-    if (url.endsWith('.css')) {
-        res.writeHead(200, { 'Content-Type': 'text/css' });
-        const cssContent = fs.readFileSync('../public/styles.css');
-        res.write(cssContent);
-    } 
-    else if(url.endsWith('projects/dashboard')){
-        htmlFile = fs.readFileSync('../public/dashboard.html');
-        res.writeHead(200, { 'Content-Type':'text/html'})
-        res.write(htmlFile);
-    }else if (url.endsWith('scripts.js')){
-        let jsFile = fs.readFileSync('../public/scripts.js');
-        res.writeHead(200, {'Content-Type':'text/javascript'});
-        res.write(jsFile);
-    }else if (url === '/weather-data'){
-        fetchWeatherData(res);
-        return;
+    const filePath = new URL(url, `http://${headers.host}`).pathname;
+
+    const fileName = filePath === '/' || filePath === '' ? HOMEPAGE : filePath;
+
+    if (url === '/weather-data'){
+        return fetchWeatherData(res);
     }else if (url === '/stop-data'){
-        fetchStopData(res,req);
-        return;
+        return fetchStopData(res,req);
+    }else if (url === '/nameday-data'){
+        return fetchNameDayData(res);
     }else{
-        res.writeHead(404, { 'Content-Type': 'text/plain' });
-        res.write("This page does not exist");
+        return serveStatic(fileName, res);
     }
-    res.end();
-    
+
 }
 
 module.exports = {handleRequest};
