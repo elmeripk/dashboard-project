@@ -167,9 +167,10 @@ function constructTramData(tramInfo){
     let minutes = date.getMinutes();
 
     if (minutes < 10) minutes = "0" + minutes;
+    console.log(minutes)
 
     const tramData = { destination : tramInfo.headsign,
-                       arrivalTime : `${date.getHours()}:${date.getMinutes()}`,
+                       arrivalTime : `${date.getHours()}:${minutes}`,
                        arrivalDay : `${date.getDate()}.${date.getMonth()+1}`
                      };
     return tramData;
