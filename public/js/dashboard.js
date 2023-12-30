@@ -14,20 +14,22 @@ async function getWeatherData(){
   return await sendFetchRequest(WEATHERURL)
 }
 
-updateDate()
-updateClock();
-setInterval(updateClock, 1000);
-
-function updateClock(){
+function updateClock(oldDate){
   const date = new Date()
   const localDate = new Intl.DateTimeFormat('fi-FI', {timeZone: 'Europe/Helsinki', hour: 'numeric', minute: 'numeric', second: 'numeric' }).format(date);
   
   if(date.getHours() === 0) updateDate();
+  //Update weather every hour
+  if(date.getHours() > oldDate.getHours) updateWeather();
+  //Update trams every 7 minutes
+  if((date - oldDate) / (1000*60) > 7) updateTransports();
   
   //Courtesy of ChatGpt
   const newSeparatorDate = localDate.replace(/\./g, ":");
   const clockElement = document.getElementById('clock');
   clockElement.textContent = newSeparatorDate;
+
+  return date;
  
 };
 
@@ -37,8 +39,7 @@ function updateDate(){
   dateElement.textContent = date;
 }
 
-(async function populateDashboard(){
-    
+async function updateNameDays(){
   const nameDayData = await sendFetchRequest(NAMEDAYURL);
     
   const finnishName = !nameDayData[0] ? "Ei nimipäiviä" : nameDayData[0].join();
@@ -47,10 +48,9 @@ function updateDate(){
   const swedishNameElement = document.getElementById('swedish-names');
   finnishNameElement.textContent = finnishName;
   swedishNameElement.textContent = swedishName;
-    
-  const tramData = TRAMS.map(tram => getStopData(tram))
-  const resolved = await Promise.all(tramData)
-    
+}
+
+async function updateWeather(){
   const weatherData = await sendFetchRequest(WEATHERURL);
   const weatherIcon = document.getElementById("weather-icon")
   const weatherTemp = document.getElementById("temperature");
@@ -69,8 +69,12 @@ function updateDate(){
     weatherSunset.innerText = "Auringonlasku: " + sunset.toLocaleTimeString('fi-FI', opts);
     weatherWindspeed.innerText = "Tuuli: " + weatherData.windSpeed + " m/s"
   }
+}
 
-  
+async function updateTransports(){
+  const tramData = TRAMS.map(tram => getStopData(tram))
+  const resolved = await Promise.all(tramData)
+    
   const tramContainers = Array.from(document.querySelectorAll('.tram-container'))
   for(let i=0;i<4;i++){
     const destination = TRAMS[i].destination;
@@ -87,11 +91,23 @@ function updateDate(){
     
     containerToPopulate.innerText = TRAMS[i].destination + ": " + day + fillData.arrivalTime; 
 
-
-
-
   }
+}
+
+(async function populateDashboard(){
   
+  let oldDate = new Date();
+  updateClock(oldDate)
+  
+  setInterval(() => {
+  oldDate = updateClock(oldDate);
+  }, 1000);
+
+  updateDate();
+  updateNameDays();
+  updateTransports();
+  updateWeather()
+    
 })();
 
 async function getStopData(transport){
