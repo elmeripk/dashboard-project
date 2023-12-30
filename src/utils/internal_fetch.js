@@ -40,7 +40,7 @@ async function fetchWeatherData(res){
         res.write(JSON.stringify(filteredData));
         res.end()
     }catch(error){
-        return onApiError(res);
+        return onApiError(res, error);
     }
 }
 
@@ -61,23 +61,28 @@ async function fetchStopData(res,req){
 
     try {
         let apiRes = "";
+        
         let bodyData = await parseRequestBody(req);
+        
         let stop = bodyData.stop
         let transportDest = bodyData.destination;
         
         try{
+            
             const dataToSend = createTransitQuery(stop);
-            apiRes = await fetch(STOPURL, {
-            method:"POST",
-            headers:{
-                "Content-Type": "application/json",
-                "digitransit-subscription-key": DIGITRANSITAPIKEY
-            },
-            body: JSON.stringify(dataToSend)
-        })
+        
+            const content = {
+                method:"POST",
+                headers:{
+                    "Content-Type": "application/json",
+                    "digitransit-subscription-key": DIGITRANSITAPIKEY
+                },
+                body: JSON.stringify(dataToSend)
+            }
+
+        apiRes = await fetch(STOPURL, content)
         
         const received = await apiRes.json();
-
         //Connecting is successful but the API returns an error
         if(apiRes.status !== 200) return onApiError(res, apiRes);
        
@@ -158,7 +163,6 @@ function constructTramData(tramInfo){
     const day = tramInfo.serviceDay;
     const realTime = time+day
     const date = new Date(realTime * 1000);
-    const timeAsLocal = date.toLocaleString('fi-FI');
 
     const tramData = { destination : tramInfo.headsign,
                        arrivalTime : `${date.getHours()}:${date.getMinutes()}`,

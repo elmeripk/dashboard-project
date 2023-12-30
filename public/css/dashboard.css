@@ -129,9 +129,9 @@ h2 {
     text-align: center;
 }
 
-#date{
-    padding: 5px;
+p, #date{
+    text-align: center;
+    padding:5px;
 }
-
 
 

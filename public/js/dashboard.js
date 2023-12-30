@@ -6,8 +6,8 @@ const TULLIB = "tampere:0812";
 const TULLIA = "tampere:0811"
 const TRAMS = [{stop : TULLIB, destination : 'Hervanta'},
               {stop : TULLIB, destination : 'TAYS'},
-              {stop : TULLIB, destination : 'Santalahti'},
-              {stop : TULLIB, destination : 'Sorin aukio'}
+              {stop : TULLIA, destination : 'Santalahti'},
+              {stop : TULLIA, destination : 'Sorin aukio'}
              ]
 
 async function getWeatherData(){
@@ -60,7 +60,7 @@ async function updateWeather(){
   // Set the src attribute of the img element
   
   if(weatherData){
-    weatherIcon.src = "http://openweathermap.org/img/wn/" + weatherData.descIcon + "@2x.png";
+    weatherIcon.src = "https://openweathermap.org/img/wn/" + weatherData.descIcon + "@2x.png";
     weatherTemp.innerText = weatherData.temp + "°C";
     const opts = { hour: "2-digit", minute: "2-digit" };
     const sunrise = new Date(weatherData.sunrise * 1000);
@@ -77,9 +77,11 @@ async function updateTransports(){
     
   const tramContainers = Array.from(document.querySelectorAll('.tram-container'))
   for(let i=0;i<4;i++){
+    
     const destination = TRAMS[i].destination;
     const containerToPopulate = tramContainers[i];
     const fillData = resolved[i]
+
     if(!fillData){
       containerToPopulate.innerText = destination + ": Ei tulevia ratikoita";
       continue
