@@ -164,6 +164,10 @@ function constructTramData(tramInfo){
     const realTime = time+day
     const date = new Date(realTime * 1000);
 
+    let minutes = date.getMinutes();
+
+    if (minutes < 10) minutes = "0" + minutes;
+
     const tramData = { destination : tramInfo.headsign,
                        arrivalTime : `${date.getHours()}:${date.getMinutes()}`,
                        arrivalDay : `${date.getDate()}.${date.getMonth()+1}`
