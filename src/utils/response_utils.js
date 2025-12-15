@@ -1,7 +1,7 @@
 const fs = require('fs');
 
 function serveStatic(filePath, res){
-    const wholePath = '../public/' + filePath
+    const wholePath = path.join(__dirname, '..', '..', 'public', filePath);
     fs.readFile(wholePath, (err, content) => {
         if (err) {
           if (err.code === 'ENOENT') {
@@ -43,7 +43,8 @@ function getContentType(filePath){
 
 function serveMissing(res){
     res.writeHead(404, { 'Content-Type': 'text/html' })
-    const missing_content = fs.readFileSync('../public/404.html');
+    const wholePath = path.join(__dirname, '..', '..', 'public', '404.html');
+    const missing_content = fs.readFileSync(wholePath);
     res.write(missing_content);
     res.end();
 }
