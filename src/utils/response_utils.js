@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 
 function serveStatic(filePath, res){
     const wholePath = path.join(__dirname, '..', '..', 'public', filePath);
