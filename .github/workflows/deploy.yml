@@ -22,7 +22,10 @@ jobs:
         username: ${{ secrets.WEB_SERVER_USERNAME }}
         key: ${{ secrets.WEB_SERVER_PRIVATE_KEY }}
         port: 22
+        # Set a directory path for nvm and load it to ssh session
         script: |
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
           cd ${{ secrets.APP_DIR }}
           git reset --hard HEAD
           git pull origin main
