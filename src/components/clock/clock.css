@@ -1,4 +1,4 @@
-
+@import "../../styles/colors.css";
 
 
 #clock-container{
@@ -11,11 +11,12 @@
 }
 
 #clock-seconds{
-    color: #5994F6;
+    color: var(--secondary-color);
     font-size: 2rem;
     margin-top: 0.5rem;
 }
 
 #date{
-    color: --var(--main-text-color);
+    color: var(--secondary-font-color);
+    font-weight: 400;
 }
