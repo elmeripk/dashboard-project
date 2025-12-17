@@ -1,0 +1,21 @@
+
+
+
+#clock-container{
+    display: flex;
+    justify-content: center;
+}
+
+#clock-hours-minutes{
+    font-size: 4rem;
+}
+
+#clock-seconds{
+    color: #5994F6;
+    font-size: 2rem;
+    margin-top: 0.5rem;
+}
+
+#date{
+    color: --var(--main-text-color);
+}

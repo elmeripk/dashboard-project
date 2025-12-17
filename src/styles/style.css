@@ -1,0 +1,39 @@
+
+@import url("./fonts.css");
+@import url("./clock.css");
+@import url("./colors.css");
+
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  font-size: 1rem;
+}
+
+html, body{
+  height: 100%;
+}
+
+body {
+  width: 100%;
+  display: grid;
+  align-items: center;
+  justify-content: center;
+}
+
+#dashboard{
+  padding: 1rem;
+  max-width: fit-content;
+  background-color: var(--dashboard-background);
+  border-radius: 0.5rem;
+  display: grid;
+  align-items: center;
+  justify-content: center;
+}
+

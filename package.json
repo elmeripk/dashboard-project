@@ -1,15 +1,15 @@
 {
-  "name": "dashboard-project",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "dashboard",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
   },
-  "author": "Elmeri Pohjois-Koivisto",
-  "license": "ISC",
-  "dependencies": {
-    "dotenv": "^16.3.1",
-    "puppeteer": "^21.6.1"
+  "devDependencies": {
+    "typescript": "~5.9.3",
+    "vite": "^7.2.4"
   }
 }
