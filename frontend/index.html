@@ -9,6 +9,7 @@
   </head>
   <body>
     <main id="dashboard">
+      <div id="alert"></div>
       <div id="date-container" class="manrope-bold">
         <div id="clock-container">
           <p id="clock-hours-minutes"></p>
@@ -17,7 +18,25 @@
 
         <p id="date"></p>
       </div>
+
+      
+
     </main>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
+
+<template id="weather-template">
+  <div id="weather-container">
+        <h2 id="weather-container-header"></h2>
+        <div id="col-1">
+          <div>
+            <img id="weather-icon" src="" alt="Weather icon">
+            <p id="weather-description"></p>
+          </div>
+        </div>
+        <p id="temperature"></p>
+        <div id="col-2"></div>
+
+      </div>
+</template>
