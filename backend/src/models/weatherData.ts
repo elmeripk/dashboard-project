@@ -1,5 +1,5 @@
 import dotenv from 'dotenv'
-import { APIFetch } from './utils/fetchUtils';
+import { APIFetch, sendError, sendSuccess } from './utils/fetchUtils';
 
 import type {Request, Response} from 'express';
 const WEATHER_KEY = process.env.OPENWEATHER_API_KEY;
@@ -11,10 +11,11 @@ const ICON_API_URL = new URL(`/img/wn/`, BASE_URL);
 const DEFAULT_LAT = '61.6315312';
 const DEFAULT_LON = '23.5006679';
 const UNITS = 'metric';
+import type { fetchError } from './utils/fetchUtils';
 
+import { CurrentWeather } from './weatherSchemas';
 
-
-function constructWeatherAPIURL(suffix:string, params:Record<string, number | string>): URL{
+function constructWeatherAPIURL(suffix:string, base:string = "", params:Record<string, number | string>  = {}): URL{
 
     // Motivation for this:
     // https://dev.to/thdr/why-should-you-use-url-constructor-instead-of-template-literals-1gp0
@@ -40,30 +41,28 @@ async function getCurrentWeather(req:Request, res: Response){
 
     const lat = (req.query.lat ? req.query.lat : DEFAULT_LAT).toString();
     const lon = (req.query.lon ? req.query.lon : DEFAULT_LON).toString();
-    const url = constructWeatherAPIURL('weather', {lat:lat, lon:lon});
+    const url = constructWeatherAPIURL('weather', DATA_API_URL.toString(), {lat:lat, lon:lon});
     
     const response = await APIFetch(url, "An error ocurred while fetching weather data", 502);
     if ('error' in response){
-        res.write(JSON.stringify(response));
+        sendError(response.error, res, response.status);
         return;
     }
-    
-    // Rename speed to wind_speed
-    const {
-        weather:[{icon}], 
-        main: {temp, feels_like}, 
-        sys: {sunrise, sunset}, 
-        name, 
-        wind: {speed: wind_speed}
-    } = response;
-    
-    const filteredWeather = {icon, temp, feels_like, sunrise, sunset, name, wind_speed};
+ 
+    // Schema parse automatically strips away unneeded fields
 
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.write(JSON.stringify(filteredWeather));
-    res.end();
+    // Difference between parse and safeParse:
+    // https://www.codu.co/articles/zod-parse-versus-safeparse-what-s-the-difference-7t_tjfne
+    const filteredWeather = CurrentWeather.safeParse(response);
+    if (!filteredWeather.success){
+        sendError("An error ocurred while processing weather data", res, 500);
+        return;
+    }
 
-    
+    sendSuccess(filteredWeather.data, res, 200);
+   
 }
+
+
 
 export {getCurrentWeather};
