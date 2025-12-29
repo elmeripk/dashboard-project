@@ -4,14 +4,13 @@ import { APIFetch, sendError, sendSuccess } from './utils/fetchUtils';
 import type {Request, Response} from 'express';
 const WEATHER_KEY = process.env.OPENWEATHER_API_KEY;
 //https://stackoverflow.com/questions/58567145/types-for-req-and-res-in-express
-const BASE_URL = "https://pro.openweathermap.org";
+const BASE_URL = "https://api.openweathermap.org";
 const VERSION = "2.5";
 const DATA_API_URL = new URL(`/data/${VERSION}/`, BASE_URL);
-const ICON_API_URL = new URL(`/img/wn/`, BASE_URL);
+
 const DEFAULT_LAT = '61.6315312';
 const DEFAULT_LON = '23.5006679';
 const UNITS = 'metric';
-import type { fetchError } from './utils/fetchUtils';
 
 import { CurrentWeather } from './weatherSchemas';
 
