@@ -2,7 +2,7 @@
 @import url("./fonts.css");
 @import url("../components/clock/clock.css");
 @import url("./colors.css");
-
+@import url("../components/weatherWidget/weatherWidget.css");
 
 *, *::before, *::after {
   box-sizing: border-box;
@@ -22,18 +22,34 @@ html, body{
 
 body {
   width: 100%;
+  background-color: var(--dashboard-background);
   display: grid;
-  align-items: center;
+  background-color: var(--dashboard-background);
+  /* Gets rid of the gap between items in dashboard because otherwise they try to fill up the vertical space */
+  align-items: start;
   justify-content: center;
 }
 
 #dashboard{
+  margin: 1.5rem 0.15rem 1.5rem 0.15rem;
   padding: 1rem;
   max-width: fit-content;
-  background-color: var(--dashboard-background);
   border-radius: 0.5rem;
   display: grid;
-  align-items: center;
   justify-content: center;
+  gap: 1.5rem;
+  max-height: fit-content;
 }
 
+@media screen and (min-width: 769px) {
+  #dashboard {
+    background-color: var(--dashboard-background);
+  }
+  /** Do not align vertically to center on mobile*/
+  body{
+    place-items: center;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+  }
+}

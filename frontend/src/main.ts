@@ -1,6 +1,8 @@
 
 import { DigitalClock } from './components/clock/DigitalClock'
-
-(function main(){
+import { WeatherWidget } from './components/weatherWidget/WeatherWidget';
+(async function main(){
     new DigitalClock();
+    await WeatherWidget.create();
+
 })();

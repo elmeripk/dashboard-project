@@ -21,7 +21,7 @@ class DigitalClock implements Clock {
         this.advanceClockBySecond();
         setInterval(() => {
             this.currDate = new Date();
-            this.advanceClockBySecond  
+            this.advanceClockBySecond();
         }, 1000);
     };
 

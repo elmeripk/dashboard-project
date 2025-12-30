@@ -1,0 +1,16 @@
+{
+  "name": "dashboard-application",
+  "version": "1.0.0",
+  "workspaces": [
+    "frontend",
+    "backend",
+    "shared"
+  ],
+  "private": true,
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "zod": "^4.2.1"
+  }
+}

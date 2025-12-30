@@ -1,42 +1,84 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="src/styles/style.css">
+    <link rel="stylesheet" href="src/styles/style.css" />
     <title>dashboard</title>
   </head>
   <body>
-    <main id="dashboard">
-      <div id="alert"></div>
-      <div id="date-container" class="manrope-bold">
-        <div id="clock-container">
+    <main id="dashboard" class="manrope">
+      <div id="date-container">
+        <div id="clock-container" class="manrope-bold">
           <p id="clock-hours-minutes"></p>
           <p id="clock-seconds"></p>
         </div>
-
         <p id="date"></p>
       </div>
 
+      <div id="weather-container">
+        <p class="weather-loading">Loading weather...</p>
+        <div class="content">
+          <h2 id="weather-container-header">
+            <img
+              src="map-pin.svg"
+              alt="Location pin icon"
+              class="weather-icon"
+            />
+            <span id="weather-city-name"></span>
+          </h2>
+          <div>
+            <div id="col-1">
+              <img id="weather-icon" alt="" />
+              <p id="weather-description"></p>
+            </div>
+            <div id="col-2">
+              <p id="weather-temperature"></p>
+            </div>
+            <div id="col-3">
+              <div>
+                <div>
+                <img
+                  src="sunrise-icon.svg"
+                  alt="Sunrise icon"
+                  class="weather-icon"
+                />
+                <p>Sunrise</p>
+                </div>
+                <p class="manrope-bold" id="weather-sunrise"></p>
+                </div>
       
-
+              <div>
+                <div>
+                <img
+                  src="moon-icon.svg"
+                  alt="Sunset icon"
+                  class="weather-icon"
+                />
+                <p>Sunset</p>
+                </div>
+                <p class="manrope-bold" id="weather-sunset"></p>
+              </div>
+              <div>
+                <div>
+                  <img
+                  src="wind-icon.svg"
+                  alt="Wind icon"
+                  class="weather-icon"
+                  
+                />
+                <p>Wind</p>
+                </div>
+                  <p class="manrope-bold" id="weather-wind"></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </main>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
 
-<template id="weather-template">
-  <div id="weather-container">
-        <h2 id="weather-container-header"></h2>
-        <div id="col-1">
-          <div>
-            <img id="weather-icon" src="" alt="Weather icon">
-            <p id="weather-description"></p>
-          </div>
-        </div>
-        <p id="temperature"></p>
-        <div id="col-2"></div>
-
-      </div>
-</template>
