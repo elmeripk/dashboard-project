@@ -4,6 +4,7 @@ import { APIWeatherResponse } from "../../../../shared/weatherSchemas";
 import { updateTextContent, updateElementAttribute } from "../../utils/domUtils";
 import {ValidatingFetcher} from "../../../../shared/utils/ValidatingFetcher";
 import * as z from "zod";
+import { Loadable } from "../loadable/Loadable";
 
 const BASE_URL = "https://openweathermap.org";
 const ICON_API_URL = new URL(`/img/wn/`, BASE_URL);
@@ -21,38 +22,27 @@ type UserLocation = z.infer<typeof UserLocationSchema>;
 
 const FIVE_MINUTES_AS_MS = 300000;
 
-export class WeatherWidget {
+export class WeatherWidget extends Loadable {
 
     userLocation: UserLocation | undefined;
     weatherContainer: HTMLDivElement | undefined;
     currentWeather: WeatherResponse | undefined;
 
-    private constructor(){}
+    private constructor(container: HTMLDivElement, loadingElement: HTMLElement, contentElement: HTMLElement){
+        super(container, loadingElement, contentElement);
+        this.weatherContainer = container;
+
+    }
 
     private async init(): Promise<void>{
-        
         this.setLoading(true);
         const userLoc = await this.getUserLocation();
         if (userLoc) this.userLocation = userLoc;
         this.setLoading(false);
-        await this.updateWeather();
-
-        
+        await this.updateWeather();  
     }
 
-    /**
-     * Toggles the loading state of the weather widget
-     * @param loading Whether to show the loading message or not
-     */
-    private setLoading(loading: boolean) {
-      const container = this.weatherContainer;
-      if (!container) return;
-      // see WeatherWidget.css for .is-loading styles
-      // Essentially this shows/hides the loading text and shows/hides the weather data
-      loading ? container.classList.add("is-loading") : container.classList.remove("is-loading");
-    }
-    
-    
+   
     private async updateWeather(){
 
         this.setLoading(true);
@@ -95,9 +85,15 @@ export class WeatherWidget {
     // code cannot run in constructor
     // Inspired by:
     // https://dev.to/somedood/the-proper-way-to-write-async-constructors-in-javascript-1o8c
-    static async create(container: HTMLDivElement){
-        const widget = new WeatherWidget();
-        widget.weatherContainer = container;
+
+    /**
+     * Static factory method to create and initialize the WeatherWidget
+     * @param container The HTMLDivElement that contains the weather widget
+     * @param loadingElement Loading HTMLElement which is shown while loading
+     * @param contentElement Content HTMLElement which is shown when not loading
+     */
+    static async create(container: HTMLDivElement, loadingElement: HTMLElement, contentElement: HTMLElement): Promise<WeatherWidget>{
+        const widget = new WeatherWidget(container, loadingElement, contentElement);
         await widget.init();
         return widget;
     }

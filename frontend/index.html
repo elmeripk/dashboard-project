@@ -18,9 +18,9 @@
       </div>
 
       <div id="weather-container" class="widget-container is-loading">
-        <p class="weather-loading">Loading weather for your location...</p>
+        <p class="loading">Loading weather for your location...</p>
         <div class="content">
-          <h2 id="weather-container-header" class="header-with-icon">
+          <h2 id="weather-container-header" class="widget-header-with-icon">
             <img
               src="map-pin.svg"
               alt="Location pin icon"
@@ -77,10 +77,26 @@
           </div>
         </div>
       <div id="nameday-container" class="widget-container">
-        <p>Loading nameday...</p>
+        <p class="loading">Loading nameday...</p>
         <div class="content">
-          <h2 id="nameday-header">Nameday today:</h2>
-          <p id="nameday-names"></p>
+          <h2 id="nameday-header" class="widget-header-with-icon">
+            <img
+              src="birthday-cake-icon.svg"
+              alt="Cake icon"
+              class="weather-icon"
+            />
+            <span id="nameday-header-text">Namedays for today</span>
+          </h2>
+          <section id="nameday-names">
+            <div class="namelist">
+              <h3 class="medium">Swedish</h3>
+              <p id="nameday-sv-names"></p>
+            </div>
+            <div class="namelist">
+              <h3 class="medium">Finnish</h3>
+              <p id="nameday-fi-names"></p>
+            </div>
+          </section>
         </div>
 
       </div>

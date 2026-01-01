@@ -10,6 +10,10 @@ import { WeatherWidget } from './components/weatherWidget/WeatherWidget';
         return;
     }
 
-    await WeatherWidget.create(weatherContainer);
+    const weatherPlaceholder = weatherContainer.querySelector<HTMLElement>(".loading");
+    const weatherContent = weatherContainer.querySelector<HTMLElement>(".content");
+    if (weatherContent && weatherPlaceholder) {
+        WeatherWidget.create(weatherContainer, weatherPlaceholder, weatherContent);
+    }
 
 })();
