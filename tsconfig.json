@@ -22,5 +22,5 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["frontend/src", "backend/src", "backend/app.ts"]
+  "include": ["frontend/src", "backend/src", "backend/app.ts", "shared/utils/ValidatingFetcher.ts"]
 }

@@ -1,5 +1,6 @@
-import dotenv from 'dotenv'
-import { APIFetch, sendError, sendSuccess } from './utils/fetchUtils';
+import {sendError, sendSuccess } from './utils/fetchUtils';
+import { ValidatingFetcher } from '../../../shared/utils/ValidatingFetcher';
+import type { Result } from '../../../shared/types';
 
 import type {Request, Response} from 'express';
 const WEATHER_KEY = process.env.OPENWEATHER_API_KEY;
@@ -13,13 +14,14 @@ const DEFAULT_LON = '23.5006679';
 const UNITS = 'metric';
 
 import { CurrentWeather } from './weatherSchemas';
+import type z from 'zod';
 
 function constructWeatherAPIURL(suffix:string, base:string = "", params:Record<string, number | string>  = {}): URL{
 
     // Motivation for this:
     // https://dev.to/thdr/why-should-you-use-url-constructor-instead-of-template-literals-1gp0
     // https://techinsights.manisuec.com/javascript/template-strings-url-search-params/
-    const currentWeatherURL = new URL(suffix, DATA_API_URL);
+    const currentWeatherURL = new URL(suffix, base);
 
     const urlParams = new URLSearchParams({
         ...params,
@@ -42,23 +44,13 @@ async function getCurrentWeather(req:Request, res: Response){
     const lon = (req.query.lon ? req.query.lon : DEFAULT_LON).toString();
     const url = constructWeatherAPIURL('weather', DATA_API_URL.toString(), {lat:lat, lon:lon});
     
-    const response = await APIFetch(url, "An error ocurred while fetching weather data", 502);
-    if ('error' in response){
-        sendError(response.error, res, response.status);
+    const response: Result<z.infer<typeof CurrentWeather>> = await ValidatingFetcher.fetchAndValidateData(url, CurrentWeather);
+    if (response.error || !response.data){
+        sendError(`An error ocurred while fetching weather data: ${response.error}`, res, 500);
         return;
     }
- 
-    // Schema parse automatically strips away unneeded fields
-
-    // Difference between parse and safeParse:
-    // https://www.codu.co/articles/zod-parse-versus-safeparse-what-s-the-difference-7t_tjfne
-    const filteredWeather = CurrentWeather.safeParse(response);
-    if (!filteredWeather.success){
-        sendError("An error ocurred while processing weather data", res, 500);
-        return;
-    }
-
-    sendSuccess(filteredWeather.data, res, 200);
+    
+    sendSuccess(response.data, res, 200);
    
 }
 

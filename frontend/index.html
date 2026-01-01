@@ -17,10 +17,10 @@
         <p id="date"></p>
       </div>
 
-      <div id="weather-container">
-        <p class="weather-loading">Loading weather...</p>
+      <div id="weather-container" class="widget-container is-loading">
+        <p class="weather-loading">Loading weather for your location...</p>
         <div class="content">
-          <h2 id="weather-container-header">
+          <h2 id="weather-container-header" class="header-with-icon">
             <img
               src="map-pin.svg"
               alt="Location pin icon"
@@ -76,7 +76,15 @@
             </div>
           </div>
         </div>
+      <div id="nameday-container" class="widget-container">
+        <p>Loading nameday...</p>
+        <div class="content">
+          <h2 id="nameday-header">Nameday today:</h2>
+          <p id="nameday-names"></p>
+        </div>
+
       </div>
+
     </main>
     <script type="module" src="/src/main.ts"></script>
   </body>

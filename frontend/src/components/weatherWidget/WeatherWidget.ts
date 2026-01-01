@@ -2,6 +2,7 @@
 
 import { APIWeatherResponse } from "../../../../shared/weatherSchemas";
 import { updateTextContent, updateElementAttribute } from "../../utils/domUtils";
+import {ValidatingFetcher} from "../../../../shared/utils/ValidatingFetcher";
 import * as z from "zod";
 
 const BASE_URL = "https://openweathermap.org";
@@ -30,17 +31,12 @@ export class WeatherWidget {
 
     private async init(): Promise<void>{
         
-        const weatherContainer = document.querySelector<HTMLDivElement>("#weather-container");
-        
-        if(!weatherContainer){
-            return;
-        }
-
-        this.weatherContainer = weatherContainer;
+        this.setLoading(true);
         const userLoc = await this.getUserLocation();
         if (userLoc) this.userLocation = userLoc;
-    
+        this.setLoading(false);
         await this.updateWeather();
+
         
     }
 
@@ -51,6 +47,8 @@ export class WeatherWidget {
     private setLoading(loading: boolean) {
       const container = this.weatherContainer;
       if (!container) return;
+      // see WeatherWidget.css for .is-loading styles
+      // Essentially this shows/hides the loading text and shows/hides the weather data
       loading ? container.classList.add("is-loading") : container.classList.remove("is-loading");
     }
     
@@ -76,14 +74,14 @@ export class WeatherWidget {
         updateTextContent("#weather-sunrise", `${sunRiseLocalTime}`, this.weatherContainer);
         updateTextContent("#weather-sunset", `${sunSetLocalTime}`, this.weatherContainer);
         updateTextContent("#weather-wind", `${data.wind_speed ?? "N/A"} m/s`, this.weatherContainer);
-
-        const scale = "4x";
+ 
+        const SCALE = "4x";
         // See: https://openweathermap.org/weather-conditions
 
         // If icon is missing, set empty string to remove previous icon
         // The alt text will be shown instead and no crash occurs
-        const iconURLSuffix = data.icon ? `${data.icon}${scale !== "" ? '@' + scale : ""}.png` : "";
-        const iconUrl = new URL(iconURLSuffix, ICON_API_URL).toString();
+        const iconWithScale = data.icon ? `${data.icon}@${SCALE}.png` : "";
+        const iconUrl = new URL(iconWithScale, ICON_API_URL).toString();
 
         updateElementAttribute("#weather-icon", "src", iconUrl, this.weatherContainer);
         updateElementAttribute("#weather-icon", "alt", data.description ?? "Weather icon", this.weatherContainer);
@@ -97,11 +95,11 @@ export class WeatherWidget {
     // code cannot run in constructor
     // Inspired by:
     // https://dev.to/somedood/the-proper-way-to-write-async-constructors-in-javascript-1o8c
-    static async create(){
+    static async create(container: HTMLDivElement){
         const widget = new WeatherWidget();
+        widget.weatherContainer = container;
         await widget.init();
         return widget;
-
     }
     
     //https://stackoverflow.com/questions/2707191/unable-to-cope-with-the-asynchronous-nature-of-navigator-geolocation
@@ -169,26 +167,14 @@ export class WeatherWidget {
 
         const url = new URL("/api/v1/weather/current-weather", window.location.origin);
 
-        // In case user denied location access, do not append lat/lon params
-        if (this.userLocation){
-            url.searchParams.append("lat", this.userLocation.lat.toString());
-            url.searchParams.append("lon", this.userLocation.lon.toString());
-        }
+        const params: Record<string, string> = this.userLocation ? {
+            lat: this.userLocation.lat.toString(),
+            lon: this.userLocation.lon.toString(),
+        } : {};
 
-        const weatherRes = await fetch(url.toString());
+        const weatherRes = await ValidatingFetcher.fetchAndValidateData<WeatherResponse>(url, APIWeatherResponse, params);
 
-        if (!weatherRes.ok){
-            return null;
-        }
-
-        try {
-            // safeParse does not throw but rather returns an object indicating success or failure
-            const weatherData = APIWeatherResponse.parse(await weatherRes.json());
-            return weatherData;
-        }
-        catch (e){
-            return null;
-        }
+        return weatherRes.data;
         
     }
 

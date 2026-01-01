@@ -8,21 +8,25 @@ const DATEOPTIONS: Intl.DateTimeFormatOptions = {
 };
 
 class DigitalClock implements Clock {
-    hoursMinutesElem: HTMLParagraphElement;
-    secondsElem: HTMLParagraphElement;
-    dateElem: HTMLParagraphElement;
+    container: HTMLElement;
+    hoursMinutesElem: HTMLParagraphElement | null;
+    secondsElem: HTMLParagraphElement | null;
+    dateElem: HTMLParagraphElement | null;
     currDate: Date;
 
-    constructor(){
-        this.hoursMinutesElem = document.getElementById("clock-hours-minutes")! as HTMLParagraphElement;
-        this.secondsElem = document.getElementById("clock-seconds")! as HTMLParagraphElement;
-        this.dateElem = document.getElementById("date")! as HTMLParagraphElement;
+    constructor(container: HTMLElement = document.body) {
+        this.container = container;
+        this.hoursMinutesElem = this.container.querySelector<HTMLParagraphElement>("#clock-hours-minutes");
+        this.secondsElem = this.container.querySelector<HTMLParagraphElement>("#clock-seconds");
+        this.dateElem = this.container.querySelector<HTMLParagraphElement>("#date");
         this.currDate = new Date();
         this.advanceClockBySecond();
+        
         setInterval(() => {
             this.currDate = new Date();
             this.advanceClockBySecond();
         }, 1000);
+
     };
 
     advanceClockBySecond(){
@@ -31,9 +35,9 @@ class DigitalClock implements Clock {
         const hours = String(this.currDate.getHours()).padStart(2, '0');
         const minutes = String(this.currDate.getMinutes()).padStart(2,'0');
         const seconds = String(this.currDate.getSeconds()).padStart(2,'0');
-        this.hoursMinutesElem.innerHTML = `${hours}:${minutes}`;
-        this.secondsElem.textContent = `:${seconds}`
-        this.dateElem.textContent = fullDate;
+        if (this.hoursMinutesElem) this.hoursMinutesElem.innerHTML = `${hours}:${minutes}`;
+        if (this.secondsElem) this.secondsElem.textContent = `:${seconds}`;
+        if (this.dateElem) this.dateElem.textContent = fullDate;
 
     };
 
