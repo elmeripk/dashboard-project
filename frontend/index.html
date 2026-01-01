@@ -1,108 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="src/styles/style.css" />
-    <title>dashboard</title>
-  </head>
-  <body>
-    <main id="dashboard" class="manrope">
-      <div id="date-container">
-        <div id="clock-container" class="manrope-bold">
-          <p id="clock-hours-minutes"></p>
-          <p id="clock-seconds"></p>
-        </div>
-        <p id="date"></p>
-      </div>
 
-      <div id="weather-container" class="widget-container is-loading">
-        <p class="loading">Loading weather for your location...</p>
-        <div class="content">
-          <h2 id="weather-container-header" class="widget-header-with-icon">
-            <img
-              src="map-pin.svg"
-              alt="Location pin icon"
-              class="weather-icon"
-            />
-            <span id="weather-city-name"></span>
-          </h2>
-          <div>
-            <div id="col-1">
-              <img id="weather-icon" alt="" />
-              <p id="weather-description"></p>
-            </div>
-            <div id="col-2">
-              <p id="weather-temperature"></p>
-            </div>
-            <div id="col-3">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="src/styles/style.css" />
+  <title>dashboard</title>
+</head>
+
+<body>
+  <main id="dashboard" class="manrope">
+    <div id="date-container">
+      <div id="clock-container" class="manrope-bold">
+        <p id="clock-hours-minutes"></p>
+        <p id="clock-seconds"></p>
+      </div>
+      <p id="date"></p>
+    </div>
+
+    <div id="weather-container" class="widget-container is-loading">
+      <p class="loading">Loading weather for your location...</p>
+      <div class="content">
+        <h2 id="weather-container-header" class="widget-header-with-icon">
+          <img src="map-pin.svg" alt="Location pin icon" class="weather-icon" />
+          <span id="weather-city-name"></span>
+        </h2>
+        <div>
+          <div id="col-1">
+            <img id="weather-icon" alt="" />
+            <p id="weather-description"></p>
+          </div>
+          <div id="col-2">
+            <p id="weather-temperature"></p>
+          </div>
+          <div id="col-3">
+            <div>
               <div>
-                <div>
-                <img
-                  src="sunrise-icon.svg"
-                  alt="Sunrise icon"
-                  class="weather-icon"
-                />
+                <img src="sunrise-icon.svg" alt="Sunrise icon" class="weather-icon" />
                 <p>Sunrise</p>
-                </div>
-                <p class="manrope-bold" id="weather-sunrise"></p>
-                </div>
-      
+              </div>
+              <p class="manrope-bold" id="weather-sunrise"></p>
+            </div>
+
+            <div>
               <div>
-                <div>
-                <img
-                  src="moon-icon.svg"
-                  alt="Sunset icon"
-                  class="weather-icon"
-                />
+                <img src="moon-icon.svg" alt="Sunset icon" class="weather-icon" />
                 <p>Sunset</p>
-                </div>
-                <p class="manrope-bold" id="weather-sunset"></p>
               </div>
+              <p class="manrope-bold" id="weather-sunset"></p>
+            </div>
+            <div>
               <div>
-                <div>
-                  <img
-                  src="wind-icon.svg"
-                  alt="Wind icon"
-                  class="weather-icon"
-                  
-                />
+                <img src="wind-icon.svg" alt="Wind icon" class="weather-icon" />
                 <p>Wind</p>
-                </div>
-                  <p class="manrope-bold" id="weather-wind"></p>
-                </div>
               </div>
+              <p class="manrope-bold" id="weather-wind"></p>
             </div>
           </div>
         </div>
-      <div id="nameday-container" class="widget-container">
-        <p class="loading">Loading nameday...</p>
-        <div class="content">
-          <h2 id="nameday-header" class="widget-header-with-icon">
-            <img
-              src="birthday-cake-icon.svg"
-              alt="Cake icon"
-              class="weather-icon"
-            />
-            <span id="nameday-header-text">Namedays for today</span>
-          </h2>
-          <section id="nameday-names">
-            <div class="namelist">
-              <h3 class="medium">Swedish</h3>
-              <p id="nameday-sv-names"></p>
-            </div>
-            <div class="namelist">
-              <h3 class="medium">Finnish</h3>
-              <p id="nameday-fi-names"></p>
-            </div>
-          </section>
-        </div>
-
       </div>
+    </div>
+    <div id="nameday-container" class="widget-container">
+      <p class="loading">Loading nameday...</p>
+      <div class="content">
+        <h2 id="nameday-header" class="widget-header-with-icon">
+          <img src="birthday-cake-icon.svg" alt="Cake icon" class="weather-icon" />
+          <span id="nameday-header-text">Namedays for today</span>
+        </h2>
+        <section id="nameday-names">
+          <div class="namelist">
+            <h3 class="medium">Finnish</h3>
+            <p id="nameday-finnish-names"></p>
+          </div>
+          <div class="namelist">
+          <h3 class="medium">Swedish</h3>
+          <p id="nameday-swedish-names"></p>
+          </div>
+      </section>
+    </div>
+    </div>
+  </main>
+  <script type="module" src="/src/main.ts"></script>
+</body>
 
-    </main>
-    <script type="module" src="/src/main.ts"></script>
-  </body>
 </html>
-

@@ -1,5 +1,6 @@
 
 import { DigitalClock } from './components/clock/DigitalClock'
+import { NameDayWidget } from './components/nameDayWidget/NameDayWidget';
 import { WeatherWidget } from './components/weatherWidget/WeatherWidget';
 (async function main(){
     
@@ -14,6 +15,18 @@ import { WeatherWidget } from './components/weatherWidget/WeatherWidget';
     const weatherContent = weatherContainer.querySelector<HTMLElement>(".content");
     if (weatherContent && weatherPlaceholder) {
         WeatherWidget.create(weatherContainer, weatherPlaceholder, weatherContent);
+    }
+
+    const nameDayContainer = document.querySelector<HTMLElement>("#nameday-container");
+
+    if (!nameDayContainer) {
+        return;
+    }
+
+    const nameDayPlaceholder = nameDayContainer.querySelector<HTMLElement>(".loading");
+    const nameDayContent = nameDayContainer.querySelector<HTMLElement>(".content");
+    if (nameDayContent && nameDayPlaceholder) {
+        new NameDayWidget(nameDayContainer, nameDayContent, nameDayPlaceholder);
     }
 
 })();

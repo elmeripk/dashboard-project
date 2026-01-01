@@ -1,8 +1,9 @@
 
 #nameday-names {
     display: flex;
-    gap: 0.5rem;
-    justify-content: space-around;
+    gap: 8rem;
+    margin: 0.5rem 1rem;
+    justify-content: flex-start
  }
 
 .namelist > h3 {

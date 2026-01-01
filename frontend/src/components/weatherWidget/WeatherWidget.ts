@@ -28,6 +28,12 @@ export class WeatherWidget extends Loadable {
     weatherContainer: HTMLDivElement | undefined;
     currentWeather: WeatherResponse | undefined;
 
+    /**
+     * Constructs a WeatherWidget instance
+     * @param container The container element for the widget
+     * @param contentElem Child element of the container housing the content (sibling to loading element)
+     * @param loadElement The loading element within the container (sibling to content element)
+     */
     private constructor(container: HTMLDivElement, loadingElement: HTMLElement, contentElement: HTMLElement){
         super(container, loadingElement, contentElement);
         this.weatherContainer = container;
@@ -89,8 +95,8 @@ export class WeatherWidget extends Loadable {
     /**
      * Static factory method to create and initialize the WeatherWidget
      * @param container The HTMLDivElement that contains the weather widget
-     * @param loadingElement Loading HTMLElement which is shown while loading
-     * @param contentElement Content HTMLElement which is shown when not loading
+     * @param loadingElement Loading HTMLElement which is shown while loading (sibling to content element)
+     * @param contentElement Content HTMLElement which is shown when not loading (sibling to loading element)
      */
     static async create(container: HTMLDivElement, loadingElement: HTMLElement, contentElement: HTMLElement): Promise<WeatherWidget>{
         const widget = new WeatherWidget(container, loadingElement, contentElement);
