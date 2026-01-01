@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const APIWeatherResponse = z.object({
+const APIWeatherResponse = z.object({
     temp: z.number().optional(),
     feels_like: z.number().optional(),
     sunrise: z.number().optional(),
@@ -10,3 +10,10 @@ export const APIWeatherResponse = z.object({
     wind_speed: z.number().optional(),
     name: z.string().optional(),
 });
+
+const APINameDayResponse = z.object({
+    finnish: z.array(z.string()),
+    swedish: z.array(z.string()),
+})
+
+export {APIWeatherResponse, APINameDayResponse};

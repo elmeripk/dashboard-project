@@ -1,6 +1,6 @@
 
 
-import { APIWeatherResponse } from "../../../../shared/weatherSchemas";
+import { APIWeatherResponse } from "../../../../shared/schemas";
 import { updateTextContent, updateElementAttribute } from "../../utils/domUtils";
 import {ValidatingFetcher} from "../../../../shared/utils/ValidatingFetcher";
 import * as z from "zod";
