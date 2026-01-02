@@ -29,7 +29,7 @@ class ValidatingFetcher{
      */
     static async fetchData(url: URL | string, params: Record<string, string> = {}): Promise<Result<unknown>> {
 
-        const urlObj = typeof url === "string" ? new URL(url, window.location.origin) : url;
+        const urlObj = typeof url === "string" ? new URL(url) : url;
    
         for (const key in params) {
             urlObj.searchParams.append(key, params[key]);
@@ -55,8 +55,11 @@ class ValidatingFetcher{
      * @param schema Zod schema to validate the fetched data against
      * @returns The validated data or null if validation fails
      */
-    static async fetchAndValidateData<T>(url: URL | string, schema: ZodType<T>, params: Record<string, string> = {}): Promise<Result<T>> {
+    static async fetchAndValidateData<T extends NonNullable<unknown>>(url: URL | string, schema: ZodType<T>, params: Record<string, string> = {}): Promise<Result<T>> {
+
         const response = await ValidatingFetcher.fetchData(url, params);
+
+        //Forward the HTTP or Fetch error if it happened
         if (response.error) {
             return { error: response.error, data: null };
         }
@@ -65,8 +68,32 @@ class ValidatingFetcher{
         if (validatedData.error) {
             return { error: "Validation failed", data: null };
         }
+        if(validatedData.data == null){
+            return { error: "Validated data is null", data: null };
+        }
         return { error: null, data: validatedData.data };
     }
+
+    static async fetchHTML(url: URL | string, params: Record<string, string> = {}): Promise<Result<string>> {
+
+        const urlObj = typeof url === "string" ? new URL(url) : url;
+   
+        for (const key in params) {
+            urlObj.searchParams.append(key, params[key]);
+        }
+        
+        try {
+            const response = await fetch(urlObj.toString());
+            if (!response.ok) {
+                return { error: `HTTP error! status: ${response.status}`, data: null };
+            }
+            const data = await response.text();
+            return { error: null, data };
+        } catch (error) {
+            return { error: (error as Error).message, data: null };
+        }
+    }
+
 }
 
 export { ValidatingFetcher };

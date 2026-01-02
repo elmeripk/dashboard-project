@@ -14,6 +14,8 @@ const APIWeatherResponse = z.object({
 const APINameDayResponse = z.object({
     finnish: z.array(z.string()).default([]),
     swedish: z.array(z.string()).default([]),
+    date: z.string()
 })
+
 
 export {APIWeatherResponse, APINameDayResponse};
