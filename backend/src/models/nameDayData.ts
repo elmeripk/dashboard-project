@@ -1,9 +1,9 @@
 import type { Request, Response } from "express";
-import { ValidatingFetcher } from "../../../shared/utils/ValidatingFetcher";
-import { sendError, sendSuccess } from "./utils/fetchUtils";
+import { ValidatingFetcher } from "../../../shared/src/utils/ValidatingFetcher.js";
+import { sendError, sendSuccess } from "./utils/fetchUtils.js";
 import type {ParsedQs} from 'qs';
-import type { Result } from "../../../shared/types";
-import { APINameDayResponse } from "../../../shared/schemas";
+import type { Result } from "../../../shared/src/types.js";
+import { APINameDayResponse } from "../../../shared/src/schemas.js";
 import * as cheerio from "cheerio";
 import type z from "zod";
 
@@ -97,16 +97,20 @@ function formatDateParam(
         return { error: "The provided date format is not correct. It should be MM-DD", data: null };
     }
 
+    // Month and day are in capturing groups 1 and 2
     const [_, month, day] = match;
 
     
 
     // This is always successful because regex matches only numbers
-    // Removes leading zeroes
-    const monthInt = parseInt(month);
-    const dayInt = parseInt(day);
+    // so assertion is safe here
+    const monthInt = parseInt(month!); // Removes leading zeroes
+    const dayInt = parseInt(day!);
 
-    if (dayInt > DAYS_IN_MONTH[monthInt - 1]) {
+    // Because of regex, month is always 1-12 here
+    // so it can't go out of bounds of the array
+    // Thus assertion is safe here
+    if (dayInt > DAYS_IN_MONTH[monthInt - 1]!) {
         return { error: "The provided date is not valid", data: null };
     }
 

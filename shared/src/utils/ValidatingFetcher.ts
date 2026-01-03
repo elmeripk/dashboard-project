@@ -1,7 +1,7 @@
 // ZodSchema has been deprecated in favor of ZodType
 // https://github.com/colinhacks/zod/issues/4877
 import {ZodType} from "zod";
-import type {Result} from "../types";
+import type {Result} from "../types.js";
 
 // Declaring T here makes it available throughout the class
 // as per ChatGPT suggestion
@@ -30,9 +30,11 @@ class ValidatingFetcher{
     static async fetchData(url: URL | string, params: Record<string, string> = {}): Promise<Result<unknown>> {
 
         const urlObj = typeof url === "string" ? new URL(url) : url;
-   
-        for (const key in params) {
-            urlObj.searchParams.append(key, params[key]);
+        
+        // This is better than for .. in because then the payload
+        // is guaranteed to have only own properties (Answer by ChatGPT)
+        for (const [key, value] of Object.entries(params)) {
+            urlObj.searchParams.append(key, value);
         }
 
         try {
@@ -78,8 +80,8 @@ class ValidatingFetcher{
 
         const urlObj = typeof url === "string" ? new URL(url) : url;
    
-        for (const key in params) {
-            urlObj.searchParams.append(key, params[key]);
+        for (const [key, value] of Object.entries(params)) {
+            urlObj.searchParams.append(key, value);
         }
         
         try {

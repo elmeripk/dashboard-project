@@ -1,9 +1,9 @@
 import express from 'express';
-import { getCurrentWeather } from '../models/weatherData';
+import { getCurrentWeather } from '../models/weatherData.js';
 
 const weatherAPIRouter = express.Router();
 
-weatherAPIRouter.get("/", (req, res) => {
+weatherAPIRouter.get("/", (_, res) => {
     res.write("You reached the weather API");
     res.end();
 }

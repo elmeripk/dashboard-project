@@ -1,7 +1,7 @@
 import 'dotenv/config'
 import express from 'express';
-import weatherAPIRouter from './src/routes/weatherRoutes';
-import nameDayAPIRouter from './src/routes/nameDayRoutes';
+import weatherAPIRouter from './routes/weatherRoutes.js';
+import nameDayAPIRouter from './routes/nameDayRoutes.js';
 
 // Only if the .env is not in the same directory as app.js
 //import dotenv from 'dotenv'

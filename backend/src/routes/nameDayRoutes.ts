@@ -1,5 +1,5 @@
 import express from 'express';
-import { getNameDays } from '../models/nameDayData';
+import { getNameDays } from '../models/nameDayData.js';
 
 const nameDayAPIRouter = express.Router();
 

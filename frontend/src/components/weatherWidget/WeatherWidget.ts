@@ -1,8 +1,8 @@
 
 
-import { APIWeatherResponse } from "../../../../shared/schemas";
+import { APIWeatherResponse } from "../../../../shared/src/schemas";
 import { updateTextContent, updateElementAttribute } from "../../utils/domUtils";
-import {ValidatingFetcher} from "../../../../shared/utils/ValidatingFetcher";
+import {ValidatingFetcher} from "../../../../shared/src/utils/ValidatingFetcher";
 import * as z from "zod";
 import { Loadable } from "../loadable/Loadable";
 

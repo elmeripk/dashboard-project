@@ -1,6 +1,6 @@
-import {sendError, sendSuccess } from './utils/fetchUtils';
-import { ValidatingFetcher } from '../../../shared/utils/ValidatingFetcher';
-import type { Result } from '../../../shared/types';
+import {sendError, sendSuccess } from './utils/fetchUtils.js';
+import { ValidatingFetcher } from '../../../shared/src/utils/ValidatingFetcher.js';
+import type { Result } from '../../../shared/src/types.js';
 
 import type {Request, Response} from 'express';
 const WEATHER_KEY = process.env.OPENWEATHER_API_KEY;
@@ -13,7 +13,7 @@ const DEFAULT_LAT = '61.6315312';
 const DEFAULT_LON = '23.5006679';
 const UNITS = 'metric';
 
-import { CurrentWeather } from './weatherSchemas';
+import { CurrentWeather } from './weatherSchemas.js';
 import type z from 'zod';
 
 function constructWeatherAPIURL(suffix:string, base:string = "", params:Record<string, number | string>  = {}): URL{

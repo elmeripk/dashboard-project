@@ -1,5 +1,5 @@
 import * as z from 'zod';
-import {APIWeatherResponse} from '../../../shared/schemas';
+import {APIWeatherResponse} from '../../../shared/src/schemas.js';
 
 export const CurrentWeather = z.object({
   main: z.object({
@@ -27,8 +27,8 @@ export const CurrentWeather = z.object({
     feels_like: Math.round(data.main.feels_like),
     sunrise: data.sys.sunrise,
     sunset: data.sys.sunset,
-    icon: data.weather[0].icon,
-    description: data.weather[0].description,
+    icon: data.weather[0] ? data.weather[0].icon : "",
+    description: data.weather[0] ? data.weather[0].description : "",
     wind_speed: Math.round(data.wind.speed),
     name: data.name
   })

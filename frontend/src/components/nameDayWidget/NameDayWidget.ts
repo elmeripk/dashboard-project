@@ -1,9 +1,9 @@
 import { Loadable } from "../loadable/Loadable";
-import { APINameDayResponse } from "../../../../shared/schemas";
-import { ValidatingFetcher } from "../../../../shared/utils/ValidatingFetcher";
+import { APINameDayResponse } from "../../../../shared/src/schemas";
+import { ValidatingFetcher } from "../../../../shared/src/utils/ValidatingFetcher";
 import type z from "zod";
-import type { Result } from "../../../../shared/types";
-import { SafeJSON } from "../../../../shared/utils/SafeJSON";
+import type { Result } from "../../../../shared/src/types";
+import { SafeJSON } from "../../../../shared/src/utils/SafeJSON";
 
 export class NameDayWidget extends Loadable {
     private container: HTMLElement;
