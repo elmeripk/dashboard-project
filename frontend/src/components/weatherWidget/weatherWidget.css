@@ -91,9 +91,13 @@
     text-align: center;
 }
 
-#col-2, #col-1 {
+#col-2, #col-1, #col-3 {
     display: flex;
-    justify-content: center;
     flex-direction: column;
+    flex: 1
+}
+
+#col-2, #col-1 {
     align-items: center;
+    justify-content: center;
 }

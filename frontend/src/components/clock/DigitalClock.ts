@@ -1,4 +1,5 @@
 import type { Clock } from "./clockInterface";
+import "./clock.css";
 
 const DATEOPTIONS: Intl.DateTimeFormatOptions = {
   weekday: "long",

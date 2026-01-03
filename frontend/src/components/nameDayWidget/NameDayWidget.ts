@@ -4,6 +4,7 @@ import { ValidatingFetcher } from "../../../../shared/src/utils/ValidatingFetche
 import type z from "zod";
 import type { Result } from "../../../../shared/src/types";
 import { SafeJSON } from "../../../../shared/src/utils/SafeJSON";
+import "./NameDayWidget.css"
 
 export class NameDayWidget extends Loadable {
     private container: HTMLElement;

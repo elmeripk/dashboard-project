@@ -34,7 +34,7 @@ export abstract class Loadable {
      * @param loading Whether to show the loading element (true) or the content element (false)
      * @returns True if the elements were successfully updated, false if the elements were not found
      */
-    protected setLoading(loading: boolean): boolean {
+    public setLoading(loading: boolean): boolean {
         
         
         if (loading) {
