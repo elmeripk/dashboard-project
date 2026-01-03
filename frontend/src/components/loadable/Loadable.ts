@@ -38,11 +38,9 @@ export abstract class Loadable {
         
         
         if (loading) {
-            console.log("Setting loading state: true");
             this.loadingElement.style.display = 'block';
             this.contentElement.style.display = 'none';
         } else {
-            console.log("Setting loading state: false");
             this.loadingElement.style.display = 'none';
             this.contentElement.style.display = 'block';
         }

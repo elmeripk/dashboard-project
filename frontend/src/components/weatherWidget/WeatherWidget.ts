@@ -63,7 +63,7 @@ export class WeatherWidget extends Loadable {
         const sunRiseLocalTime = data.sunrise ? new Date(data.sunrise * 1000).toLocaleTimeString([], DATE_FORMAT_OPTIONS) : "N/A";
         const sunSetLocalTime = data.sunset ? new Date(data.sunset * 1000).toLocaleTimeString([], DATE_FORMAT_OPTIONS) : "N/A";
 
-        updateTextContent("#weather-city-name", data.name ?? "N/A", this.weatherContainer);
+        updateTextContent("#weather-city-name", `Weather in ${data.name ?? "N/A"}`, this.weatherContainer);
         updateTextContent("#weather-temperature", `${data.temp ?? "N/A"}°C`, this.weatherContainer);
         updateTextContent("#weather-feels-like", `Feels like: ${data.feels_like ?? "N/A"}°C`, this.weatherContainer);
         updateTextContent("#weather-description", data.description ?? "N/A", this.weatherContainer);
