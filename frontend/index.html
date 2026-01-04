@@ -11,6 +11,7 @@
 
 <body>
   <main id="dashboard" class="manrope">
+    <div id="toast-container"></div>
     <div id="date-container">
       <div id="clock-container" class="manrope-bold">
         <p id="clock-hours-minutes"></p>
@@ -20,6 +21,7 @@
     </div>
 
     <div id="weather-container" class="widget-container">
+
       <p class="loading">Loading weather for your location...</p>
       <div class="content">
         <h2 id="weather-container-header" class="widget-header-with-icon">
@@ -74,26 +76,40 @@
             <p id="nameday-finnish-names"></p>
           </div>
           <div class="namelist">
-          <h3 class="medium">Swedish</h3>
-          <p id="nameday-swedish-names"></p>
+            <h3 class="medium">Swedish</h3>
+            <p id="nameday-swedish-names"></p>
           </div>
-      </section>
-    </div>
+        </section>
+      </div>
     </div>
 
     <div id="transit-container" class="widget-container">
       <p class="loading italic normal">Loading transit info...</p>
       <div class="content">
-         <h2 id="nameday-header" class="widget-header-with-icon">
+        <h2 id="nameday-header" class="widget-header-with-icon">
           <img src="tram-icon.svg" alt="Transit icon" class="icon" />
           <span id="nameday-header-text">Transit information</span>
-      </h2>
+        </h2>
       </div>
-     
+
     </div>
 
   </main>
   <script type="module" src="/src/main.ts"></script>
 </body>
+
+<template id="toast-template">
+  <div class="toast">
+
+    <button class="toast-close-button">
+      <img src="close-icon.svg" alt="Close icon" class="toast-button-icon"/>
+    </button>
+
+    <img class="toast-icon icon" />
+    <p class="toast-message"></p>
+  </div>
+
+  </div>
+</template>
 
 </html>

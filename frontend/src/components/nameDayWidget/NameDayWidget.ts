@@ -83,7 +83,6 @@ export class NameDayWidget extends Loadable {
             console.error("NameDayWidget: Cannot render name days, elements not found.");
             return;
         }
-        console.log("NameDayWidget: Rendering name days", data);
         this.swedishNamesElem.textContent = data.swedish.join(", ") || "N/A";
         this.finnishNamesElem.textContent = data.finnish.join(", ") || "N/A";
     }

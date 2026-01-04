@@ -2,6 +2,7 @@ import { WeatherWidget } from "./WeatherWidget";
 import { APIWeatherResponse } from "../../../../shared/src/schemas";
 import { ValidatingFetcher } from "../../../../shared/src/utils/ValidatingFetcher";
 import * as z from "zod";
+import { ToastManager } from "../toastWidget/toastManager";
 
 const FIVE_MINUTES_AS_MS = 300_000;
 
@@ -39,17 +40,21 @@ export class WeatherWidgetController {
 
     /** Update weather (fetch + render) */
     async updateWeather() {
-        if (!this.userLocation) return;
         this.widget.setLoading(true);
-        const data = await this.fetchCurrentWeather(this.userLocation);
+        const data = await this.fetchCurrentWeather();
         if (data) this.widget.render(data);
         this.widget.setLoading(false);
     }
 
     /** Fetch weather from API */
-    private async fetchCurrentWeather(location: UserLocation): Promise<WeatherResponse | null> {
+    private async fetchCurrentWeather(): Promise<WeatherResponse | null> {
         const url = new URL("/api/v1/weather/current-weather", window.location.origin);
-        const params = { lat: location.lat.toString(), lon: location.lon.toString() };
+        
+        const params: Record<string, string> = this.userLocation ? {
+            lat: this.userLocation.lat.toString(),
+            lon: this.userLocation.lon.toString(),
+        } : {};
+
         const res = await ValidatingFetcher.fetchAndValidateData<WeatherResponse>(url, APIWeatherResponse, params);
         return res.data;
     }
@@ -59,7 +64,10 @@ export class WeatherWidgetController {
         const cached = this.getPosFromSessionStorage();
         if (cached && Date.now() - cached.timestamp < FIVE_MINUTES_AS_MS) return cached;
 
-        if (!("geolocation" in navigator)) return null;
+        if (!("geolocation" in navigator)) {
+            ToastManager.getInstance().warning("Geolocation is not supported by your browser. Default location will be used.", 5000);
+            return null;
+        }
 
         return new Promise((resolve) => {
             navigator.geolocation.getCurrentPosition(
@@ -72,9 +80,11 @@ export class WeatherWidgetController {
                     this.storePosToSessionStorage(userPos);
                     resolve(userPos);
                 },
-                () => resolve(null)
-            );
-        });
+                () => {
+                    ToastManager.getInstance().warning("Unable to retrieve your location. Default location will be used.", 5000);
+                    resolve(null);
+                })
+    });
     }
 
     private storePosToSessionStorage(loc: UserLocation) {
