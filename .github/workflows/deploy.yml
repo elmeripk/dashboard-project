@@ -31,7 +31,10 @@ jobs:
           echo "Pulling code"
           git pull origin main
           echo "Installing dependencies"
-          npm install
+          rm -rf node_modules package-lock.json
+          npm ci
           echo "Building project"
           npm run build
+          echo "Restarting server"
           pm2 restart dashboard-api || pm2 start backend/dist/app.js --name dashboard-api
+
