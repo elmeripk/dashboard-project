@@ -1,15 +1,22 @@
 {
-  "name": "dashboard-project",
+  "name": "dashboard-application",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "workspaces": [
+    "frontend",
+    "backend",
+    "shared"
+  ],
+  "private": true,
+  "devDependencies": {
+    "typescript": "^5.9.3"
   },
-  "author": "Elmeri Pohjois-Koivisto",
-  "license": "ISC",
   "dependencies": {
-    "dotenv": "^16.3.1",
-    "puppeteer": "^21.6.1"
+    "zod": "^4.2.1"
+  },
+  "scripts": {
+    "build:frontend": "cd frontend && npm run build",
+    "build:backend": "cd backend && npm run build",
+    "build:shared": "cd shared && npm run build",
+    "build": "npm run build:backend && npm run build:frontend"
   }
 }

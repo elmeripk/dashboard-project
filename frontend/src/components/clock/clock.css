@@ -1,0 +1,25 @@
+@import "../../styles/colors.css";
+
+
+#clock-container{
+    display: flex;
+    justify-content: center;
+}
+
+#clock-hours-minutes{
+    font-size: 4rem;
+}
+
+#clock-seconds{
+    color: var(--secondary-color);
+    font-size: 2rem;
+    margin-top: 0.5rem;
+}
+
+#date{
+    color: var(--secondary-font-color);
+    font-weight: 400;
+    text-align: center;
+}
+
+

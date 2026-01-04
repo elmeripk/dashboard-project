@@ -1,4 +1,4 @@
-const http = require('http');
+import http from 'http';
 require('dotenv').config();
 
 const { handleRequest } = require('./router.js');

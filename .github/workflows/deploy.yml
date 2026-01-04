@@ -30,4 +30,5 @@ jobs:
           git reset --hard HEAD
           git pull origin main
           npm install
-          pm2 restart src/index.js
+          npm run build
+          pm2 restart dashboard-api || pm2 start backend/dist/app.js --name dashboard-api
