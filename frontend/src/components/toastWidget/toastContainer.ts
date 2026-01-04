@@ -20,6 +20,12 @@ class ToastContainer {
         this.template = template;
     }
 
+    /**
+     * Adds a toast notification to a the container
+     * @param type Type of the toast (warning or error)
+     * @param message Message to display in the toast
+     * @param duration Duration in milliseconds for which the toast is visible
+     */
     addToast(type: IconType, message: string, duration = 3000) {
         const result = this.createToastElement(type, message);
 
@@ -56,6 +62,12 @@ class ToastContainer {
         });
     }
 
+    /**
+     * Creates a toast DOM element from the template
+     * @param type Type of the toast (warning or error)
+     * @param message Message to display in the toast
+     * @returns Wrapper object containing either the created HTMLElement or an error message
+     */
     private createToastElement(type: IconType, message: string): Result<HTMLElement> {
 
         // This is assured to be valid because the the template is provided
