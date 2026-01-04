@@ -28,7 +28,10 @@ jobs:
           [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
           cd ${{ secrets.APP_DIR }}
           git reset --hard HEAD
+          echo "Pulling code"
           git pull origin main
+          echo "Installing dependencies"
           npm install
+          echo "Building project"
           npm run build
           pm2 restart dashboard-api || pm2 start backend/dist/app.js --name dashboard-api
