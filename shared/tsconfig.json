@@ -15,6 +15,7 @@
     "noImplicitOverride": true,
 
     /* Transpiling with TypeScript */
+    "rootDir": "src",
     "module": "NodeNext",
     "outDir": "dist",
     "sourceMap": true,
