@@ -31,7 +31,6 @@ jobs:
           echo "Pulling code"
           git pull origin main
           echo "Installing dependencies"
-          rm -rf node_modules package-lock.json
           npm ci
           echo "Building project"
           npm run build
