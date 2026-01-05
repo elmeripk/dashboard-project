@@ -5,7 +5,8 @@ import { fileURLToPath } from 'url';
 // https://builtin.com/articles/dirname-not-defined-es-module-scope
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-dotenv.config({path: path.resolve(__dirname, '../.env')});
+// .env is at the project root
+dotenv.config({path: path.resolve(__dirname, '../../../.env')});
 
 import { ValidatingFetcher } from '@dashboard/shared';
 import type { Result } from '@dashboard/shared';
