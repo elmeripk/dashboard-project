@@ -1,6 +1,6 @@
 import {sendError, sendSuccess } from './utils/fetchUtils.js';
-import { ValidatingFetcher } from '../../../shared/src/utils/ValidatingFetcher.js';
-import type { Result } from '../../../shared/src/types.js';
+import { ValidatingFetcher } from '@dashboard/shared';
+import type { Result } from '@dashboard/shared';
 
 import type {Request, Response} from 'express';
 const WEATHER_KEY = process.env.OPENWEATHER_API_KEY;

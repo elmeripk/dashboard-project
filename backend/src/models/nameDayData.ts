@@ -1,9 +1,8 @@
 import type { Request, Response } from "express";
-import { ValidatingFetcher } from "../../../shared/src/utils/ValidatingFetcher.js";
+import { ValidatingFetcher, APINameDayResponse } from "@dashboard/shared";
 import { sendError, sendSuccess } from "./utils/fetchUtils.js";
 import type {ParsedQs} from 'qs';
-import type { Result } from "../../../shared/src/types.js";
-import { APINameDayResponse } from "../../../shared/src/schemas.js";
+import type { Result } from "@dashboard/shared";
 import * as cheerio from "cheerio";
 import type z from "zod";
 

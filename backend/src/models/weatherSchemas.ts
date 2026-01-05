@@ -1,5 +1,5 @@
 import * as z from 'zod';
-import {APIWeatherResponse} from '../../../shared/src/schemas.js';
+import {APIWeatherResponse} from "@dashboard/shared";
 
 export const CurrentWeather = z.object({
   main: z.object({

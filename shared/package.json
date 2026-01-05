@@ -1,5 +1,14 @@
 {
-  "name": "@my-project/shared",
+  "name": "@dashboard/shared",
+   "exports": {
+    ".": {
+      "import": {
+        "my-monorepo-dev": "./src/index.ts",
+        "default": "./dist/index.js",
+        "types": "./dist/index.d.ts"
+      }
+    }
+  },
   "version": "1.0.0",
   "type": "module",
   "dependencies": {
