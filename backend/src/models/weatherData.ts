@@ -1,30 +1,18 @@
 import {sendError, sendSuccess } from './utils/fetchUtils.js';
-import dotenv from 'dotenv';
-import path from 'path';
-import { fileURLToPath } from 'url';
-// https://builtin.com/articles/dirname-not-defined-es-module-scope
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-// .env is at the project root
-dotenv.config({path: path.resolve(__dirname, '../../../.env')});
-
 import { ValidatingFetcher } from '@dashboard/shared';
 import type { Result } from '@dashboard/shared';
 
 import type {Request, Response} from 'express';
+import { CurrentWeather } from './weatherSchemas.js';
+import type z from 'zod';
 const WEATHER_KEY = process.env.OPENWEATHER_API_KEY;
 //https://stackoverflow.com/questions/58567145/types-for-req-and-res-in-express
 const BASE_URL = "https://api.openweathermap.org";
 const VERSION = "2.5";
 const DATA_API_URL = new URL(`/data/${VERSION}/`, BASE_URL);
-console.log(WEATHER_KEY);
 const DEFAULT_LAT = '61.6315312';
 const DEFAULT_LON = '23.5006679';
 const UNITS = 'metric';
-
-import { CurrentWeather } from './weatherSchemas.js';
-import type z from 'zod';
-import { configDotenv } from 'dotenv';
 
 function constructWeatherAPIURL(suffix:string, base:string = "", params:Record<string, number | string>  = {}): URL{
     
