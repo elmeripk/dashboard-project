@@ -48,7 +48,7 @@ export class WeatherWidgetController {
 
     /** Fetch weather from API */
     private async fetchCurrentWeather(): Promise<WeatherResponse | null> {
-        const url = new URL("/dashboard/api/v1/weather/current-weather", window.location.origin);
+        const url = new URL("/api/v1/weather/current-weather", window.location.origin);
         
         const params: Record<string, string> = this.userLocation ? {
             lat: this.userLocation.lat.toString(),

@@ -17,8 +17,8 @@ const HOST = process.env.HOST || "localhost";
 
 const app = express();
 
-app.use('/weather', weatherAPIRouter);
-app.use('/namedays', nameDayAPIRouter);
+app.use('/api/v1/weather', weatherAPIRouter);
+app.use('/api/v1/namedays', nameDayAPIRouter);
 
 
 app.listen(PORT, HOST, err => {
