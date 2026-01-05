@@ -11,7 +11,7 @@ import nameDayAPIRouter from './routes/nameDayRoutes.js';
 const PORT = Number(process.env.PORT) || 3000;
 const HOST = process.env.HOST || "localhost";
 
-
+console.log("API KEY IS:", process.env.OPENWEATHER_API_KEY);
 const app = express();
 
 app.use('/api/v1/weather', weatherAPIRouter);
