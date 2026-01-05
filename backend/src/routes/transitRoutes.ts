@@ -1,9 +1,11 @@
 import express from 'express';
-import { getAllRoutes } from '../models/transitData.js';
+import { getStopsTre, getAllStops } from '../models/transitData.js';
 
 
 const transitAPIRouter = express.Router();
 
-transitAPIRouter.get("/", getAllRoutes);
+transitAPIRouter.get("/", getAllStops);
+transitAPIRouter.get("/tre", getStopsTre);
+
 
 export default transitAPIRouter;
