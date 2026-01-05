@@ -8,7 +8,7 @@ import { SafeJSON } from "../../../../shared/src/utils/SafeJSON";
 export class NameDayWidgetController {
     private view: NameDayWidget;
     private searchDay: string = this.convertDateToMMDD(new Date());
-    private apiUrl: string = "/api/v1/namedays";
+    private apiUrl: string = "/dashboard/api/v1/namedays";
 
     /**
      * Constructs a NameDayWidgetController instance
