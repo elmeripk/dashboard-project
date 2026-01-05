@@ -1,4 +1,12 @@
 import {sendError, sendSuccess } from './utils/fetchUtils.js';
+import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
+// https://builtin.com/articles/dirname-not-defined-es-module-scope
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+dotenv.config({path: path.resolve(__dirname, '../.env')});
+
 import { ValidatingFetcher } from '@dashboard/shared';
 import type { Result } from '@dashboard/shared';
 
@@ -8,16 +16,17 @@ const WEATHER_KEY = process.env.OPENWEATHER_API_KEY;
 const BASE_URL = "https://api.openweathermap.org";
 const VERSION = "2.5";
 const DATA_API_URL = new URL(`/data/${VERSION}/`, BASE_URL);
-
+console.log(WEATHER_KEY);
 const DEFAULT_LAT = '61.6315312';
 const DEFAULT_LON = '23.5006679';
 const UNITS = 'metric';
 
 import { CurrentWeather } from './weatherSchemas.js';
 import type z from 'zod';
+import { configDotenv } from 'dotenv';
 
 function constructWeatherAPIURL(suffix:string, base:string = "", params:Record<string, number | string>  = {}): URL{
-
+    
     // Motivation for this:
     // https://dev.to/thdr/why-should-you-use-url-constructor-instead-of-template-literals-1gp0
     // https://techinsights.manisuec.com/javascript/template-strings-url-search-params/
@@ -43,7 +52,7 @@ async function getCurrentWeather(req:Request, res: Response){
     const lat = (req.query.lat ? req.query.lat : DEFAULT_LAT).toString();
     const lon = (req.query.lon ? req.query.lon : DEFAULT_LON).toString();
     const url = constructWeatherAPIURL('weather', DATA_API_URL.toString(), {lat:lat, lon:lon});
-    
+    console.log(WEATHER_KEY);
     const response: Result<z.infer<typeof CurrentWeather>> = await ValidatingFetcher.fetchAndValidateData(url, CurrentWeather);
     if (response.error || !response.data){
         sendError(`An error ocurred while fetching weather data: ${response.error}`, res, 500);
