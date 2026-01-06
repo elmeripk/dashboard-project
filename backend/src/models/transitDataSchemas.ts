@@ -1,4 +1,5 @@
 import {z} from 'zod';
+import { APITransitScheduleEntry } from '@dashboard/shared';
 
 const transitStopSchema = z.object({
     gtfsId: z.string(),
@@ -15,6 +16,15 @@ const originalStopsData = z.object({
     })
 });
 
+const originalTransitScheduleData = z.object({
+    data: z.object({
+        stop: z.object({
+            name: z.string(),
+            stoptimesWithoutPatterns: z.array(APITransitScheduleEntry)
+        })
+    })
+});
+
 const transitStopListSchema = z.array(transitStopSchema);
 
-export {transitStopSchema, originalStopsData, transitStopListSchema};
+export {transitStopSchema, originalStopsData, transitStopListSchema, originalTransitScheduleData};

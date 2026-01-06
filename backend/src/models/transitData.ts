@@ -2,8 +2,9 @@ const NYSSE_KEY = process.env.NYSSE_API_KEY || ""
 import type { Request, Response } from 'express';
 import { Result} from '@dashboard/shared';
 import { ValidatingFetcher } from '@dashboard/shared';
+import { originalTransitScheduleData } from './transitDataSchemas.js';
 import { transitStopListSchema, originalStopsData } from './transitDataSchemas.js';
-import { APITransitStopResponse } from '@dashboard/shared';
+import { APITransitStopResponse, APITransitScheduleResponse} from '@dashboard/shared';
 const BASE_URL = "https://api.digitransit.fi"
 const ROUTE_API_VERSION = "v2"
 const SUB_API_VERSION = "v1"
@@ -15,6 +16,7 @@ const MS_IN_24_HOURS = 24 * 60 * 60 * 1000;
 
 type FrontendTransitStopList = z.infer<typeof APITransitStopResponse>;
 type StopsData = z.infer<typeof transitStopListSchema>;
+type NextSchedules = z.infer<typeof APITransitScheduleResponse>;
 
 /** In-memory cache for transit data */
 class TransitCache {
@@ -81,6 +83,25 @@ async function getStopsMatchingPattern(req: Request, res: Response): Promise<voi
 
     res.status(200).json(result.data);
 }
+
+async function getNextDeparturesForStop(req: Request, res: Response): Promise<void> {
+    const stopId = req.query.stopId ? req.query.stopId.toString() : "";
+    console.log("TransitData: Received request for next departures for stopId ", stopId);
+    if (!stopId) {
+        res.status(400).send("Missing stopId query parameter");
+        return;
+    }
+
+    const result = await getNextDeparturesForStopData(stopId);
+
+    if (result.error || !result.data) {
+        res.status(500).send(`Error fetching next departures data: ${result.error}`);
+        return;
+    }
+
+    res.status(200).json(result.data);
+}
+
 
 // TODO: MAKE ENDPOINTS FOR TAMPERE AND ALL STOPS
 // AND MAKE IT SUPPORT QUERY PARAMETER FOR FILTERING STOPS BY NAME
@@ -183,4 +204,51 @@ function filterStopsForTampere(stops: StopsData): StopsData {
     return stops.filter(stop => stop.gtfsId.toLowerCase().includes("tampere"));
 }
 
-export { getStopsTre, getAllStops, getStopsMatchingPattern };
+/**
+ * Id is GTFS stop ID not id
+ * @see https://digitransit.fi/en/developers/apis/1-routing-api/stops/#next-departures-and-arrivals
+ * @param stopId 
+ */
+async function getNextDeparturesForStopData(stopId: string): Promise<Result<NextSchedules>> {
+
+    // THe id is not checked here, assume caller passes valid GTFS stop ID
+    // and check errors from the API call instead
+
+    const query = `
+    query {
+        stop(id: "${stopId}") {
+            name
+            stoptimesWithoutPatterns {
+                scheduledDeparture
+                realtimeDeparture
+                departureDelay
+                headsign
+                serviceDay
+            }
+        }
+        }`;
+
+    const body = {query: query};
+    const result = await ValidatingFetcher.fetchAndValidateData(TRANSIT_API_URL, originalTransitScheduleData, {}, "POST", body);
+
+    if (result.error || !result.data) {
+        return {error: result.error || "No data", data: null};
+    }
+
+    const stopData = result.data.data.stop;
+    if (!stopData) {
+        return {error: `No stop data found for stopId ${stopId}`, data: null};
+    }
+
+    // Transform to correct format for frontend
+    const nextSchedules: NextSchedules = {
+        name: stopData.name,
+        schedules: stopData.stoptimesWithoutPatterns
+    };
+
+    return {data: nextSchedules, error: null};
+    
+}
+
+
+export { getStopsTre, getAllStops, getStopsMatchingPattern, getNextDeparturesForStop };

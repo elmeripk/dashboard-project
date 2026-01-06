@@ -23,7 +23,20 @@ const APITransitStop = z.object({
     id: z.string(),
 });
 
+const APITransitScheduleEntry = z.object({
+    scheduledDeparture: z.number().optional(),
+    realtimeDeparture: z.number().optional(),
+    headsign: z.string().optional(),
+    departureDelay: z.number().optional(),
+    serviceDay: z.number().optional(),
+});
+
+const APITransitScheduleResponse = z.object({
+    name: z.string(),
+    schedules: z.array(APITransitScheduleEntry)
+});
+
 
 const APITransitStopResponse = z.array(APITransitStop);
 
-export {APIWeatherResponse, APINameDayResponse, APITransitStop, APITransitStopResponse};
+export {APIWeatherResponse, APINameDayResponse, APITransitStop, APITransitStopResponse, APITransitScheduleEntry, APITransitScheduleResponse};

@@ -13,9 +13,45 @@ body, input, select, textarea, button {
     transition: all 0.2s ease-in-out;
 }
 
-#transit-stop-input:focus {
-    border-color: #3b82f6; /* Blue accent */
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
-    background-color: #fff;
+/* Transit rows container */
+#transit-stops {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
 }
+
+/* Individual arrival row */
+#transit-stops > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  background-color: #f9fafb;
+  border-radius: 0.75rem;
+}
+
+/* Scheduled time */
+#transit-stops .scheduled-departure-time {
+  font-size: 85%;
+  color: #6b7280;
+  text-align: right;
+}
+
+/* Realtime time */
+#transit-stops .realtime-departure-time {
+  font-size: 90%;
+  font-weight: 600;
+  color: #111827;
+  text-align: right;
+}
+
+.times {
+  display: flex;
+  justify-content: space-between;
+
+  gap: 2rem;
+}
+
+
 
