@@ -3,12 +3,11 @@ import { ToastManager } from "../toastWidget/toastManager";
 import { debounce } from "../../utils/debounce";
 import type { Result } from "../../../../shared/src/types";
 import { ValidatingFetcher } from "../../../../shared/src/utils/ValidatingFetcher";
-import { APITransitStopResponse, APITransitScheduleEntry, APITransitScheduleResponse } from "../../../../shared/src/schemas";
+import { APITransitStopResponse, APITransitScheduleResponse } from "../../../../shared/src/schemas";
 
 import z from "zod";
 
 type StopList = z.infer<typeof APITransitStopResponse>;
-type ScheduleEntry = z.infer<typeof APITransitScheduleEntry>;
 type ScheduleResponse = z.infer<typeof APITransitScheduleResponse>;
 class TransitWidgetController {
 
