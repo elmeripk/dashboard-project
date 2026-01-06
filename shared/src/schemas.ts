@@ -17,5 +17,26 @@ const APINameDayResponse = z.object({
     date: z.string()
 })
 
+const APITransitStop = z.object({
+    gtfsId: z.string(),
+    name: z.string(),
+    id: z.string(),
+});
 
-export {APIWeatherResponse, APINameDayResponse};
+const APITransitScheduleEntry = z.object({
+    scheduledDeparture: z.number().optional(),
+    realtimeDeparture: z.number().optional(),
+    headsign: z.string().optional(),
+    departureDelay: z.number().optional(),
+    serviceDay: z.number().optional(),
+});
+
+const APITransitScheduleResponse = z.object({
+    name: z.string(),
+    schedules: z.array(APITransitScheduleEntry)
+});
+
+
+const APITransitStopResponse = z.array(APITransitStop);
+
+export {APIWeatherResponse, APINameDayResponse, APITransitStop, APITransitStopResponse, APITransitScheduleEntry, APITransitScheduleResponse};

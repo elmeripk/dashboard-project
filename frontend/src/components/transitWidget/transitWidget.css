@@ -1,0 +1,57 @@
+/* General font and container styling */
+body, input, select, textarea, button {
+    font-family: 'Manrope', sans-serif;
+}
+
+/* Transit input box */
+#transit-stop-input {
+    width: 100%;
+    padding: 10px 12px;
+    margin: 8px 0;
+    background-color: #f9f9f9;
+    color: #333;
+    transition: all 0.2s ease-in-out;
+}
+
+/* Transit rows container */
+#transit-stops {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* Individual arrival row */
+#transit-stops > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  background-color: #f9fafb;
+  border-radius: 0.75rem;
+}
+
+/* Scheduled time */
+#transit-stops .scheduled-departure-time {
+  font-size: 85%;
+  color: #6b7280;
+  text-align: right;
+}
+
+/* Realtime time */
+#transit-stops .realtime-departure-time {
+  font-size: 90%;
+  font-weight: 600;
+  color: #111827;
+  text-align: right;
+}
+
+.times {
+  display: flex;
+  justify-content: space-between;
+
+  gap: 2rem;
+}
+
+
+

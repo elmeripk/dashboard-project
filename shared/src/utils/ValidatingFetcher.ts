@@ -2,6 +2,7 @@
 // https://github.com/colinhacks/zod/issues/4877
 import {ZodType} from "zod";
 import type {Result} from "../types.js";
+type FetchRequestType = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
 
 // Declaring T here makes it available throughout the class
 // as per ChatGPT suggestion
@@ -16,6 +17,7 @@ class ValidatingFetcher{
     private static validateResponse<T>(data: unknown, schema: ZodType<T>): Result<T> {
         const validated = schema.safeParse(data);
         if (!validated.success) {
+            console.error("ValidatingFetcher: Data validation failed", validated.error);
             return { error: JSON.stringify(validated.error), data: null };
         }
         return { error: null, data: validated.data };
@@ -27,7 +29,7 @@ class ValidatingFetcher{
      * @param url URL endpoint to fetch data from, concatenated with base URL if applicable
      * @returns The fetched data as JSON or null on failure
      */
-    static async fetchData(url: URL | string, params: Record<string, string> = {}): Promise<Result<unknown>> {
+    static async fetchData(url: URL | string, params: Record<string, string> = {}, requestType: FetchRequestType = "GET", body?: unknown): Promise<Result<unknown>> {
 
         const urlObj = typeof url === "string" ? new URL(url) : url;
         
@@ -38,8 +40,23 @@ class ValidatingFetcher{
         }
 
         try {
-            const response = await fetch(urlObj.toString());
+
+            const fetchOptions: RequestInit = {
+                method: requestType,
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            };
+
+            if (body) {
+                fetchOptions.body = JSON.stringify(body);
+            }
+
+            const response = await fetch(urlObj.toString(), fetchOptions);
+            
             if (!response.ok) {
+                console.error(`Error fetching data from ${urlObj.toString()}`);
+                console.error(await response.text());
                 return { error: `HTTP error! status: ${response.status}`, data: null };
             }
             const data = await response.json();
@@ -57,9 +74,9 @@ class ValidatingFetcher{
      * @param schema Zod schema to validate the fetched data against
      * @returns The validated data or null if validation fails
      */
-    static async fetchAndValidateData<T extends NonNullable<unknown>>(url: URL | string, schema: ZodType<T>, params: Record<string, string> = {}): Promise<Result<T>> {
+    static async fetchAndValidateData<T extends NonNullable<unknown>>(url: URL | string, schema: ZodType<T>, params: Record<string, string> = {}, requestType: FetchRequestType = "GET", body?: unknown): Promise<Result<T>> {
 
-        const response = await ValidatingFetcher.fetchData(url, params);
+        const response = await ValidatingFetcher.fetchData(url, params, requestType, body);
 
         //Forward the HTTP or Fetch error if it happened
         if (response.error) {
@@ -98,4 +115,4 @@ class ValidatingFetcher{
 
 }
 
-export { ValidatingFetcher };
+export { ValidatingFetcher, type FetchRequestType };
