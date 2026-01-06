@@ -90,7 +90,8 @@
           <img src="tram-icon.svg" alt="Transit icon" class="icon" />
           <span id="nameday-header-text">Transit information</span>
         </h2>
-        <input list="transit-stops-datalist" id="transit-stop-input" placeholder="Start writing..." />
+        <!--https://dev.to/siddev/customise-datalist-45p0-->
+        <input list="transit-stops-datalist" id="transit-stop-input" placeholder="Start writing..." autocomplete="off" list=""/>
         <datalist id="transit-stops-datalist">
           <!-- Filled dynamically -->
         </datalist>

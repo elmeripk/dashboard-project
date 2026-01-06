@@ -1,0 +1,21 @@
+/* General font and container styling */
+body, input, select, textarea, button {
+    font-family: 'Manrope', sans-serif;
+}
+
+/* Transit input box */
+#transit-stop-input {
+    width: 100%;
+    padding: 10px 12px;
+    margin: 8px 0;
+    background-color: #f9f9f9;
+    color: #333;
+    transition: all 0.2s ease-in-out;
+}
+
+#transit-stop-input:focus {
+    border-color: #3b82f6; /* Blue accent */
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+    background-color: #fff;
+}
+

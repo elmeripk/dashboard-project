@@ -6,6 +6,8 @@ import { WeatherWidget } from './components/weatherWidget/WeatherWidget';
 import { WeatherWidgetController } from './components/weatherWidget/WeatherWidgetController';
 import { ToastManager } from './components/toastWidget/toastManager';
 import { ToastContainer } from './components/toastWidget/toastContainer';
+import { TransitWidget } from './components/transitWidget/transitWidget';
+import { TransitWidgetController } from './components/transitWidget/transitWidgetController';
 
 (async function main(){
     
@@ -52,6 +54,20 @@ import { ToastContainer } from './components/toastWidget/toastContainer';
     if (nameDayContent && nameDayPlaceholder) {
         const nameDayWidget = new NameDayWidget(nameDayContainer, nameDayContent, nameDayPlaceholder);
         new NameDayWidgetController(nameDayWidget);
+    }
+
+    const transitContainer = document.querySelector<HTMLElement>("#transit-container");
+
+    if (!transitContainer) {
+        return;
+    }
+
+    const transitPlaceholder = transitContainer.querySelector<HTMLElement>(".loading");
+    const transitContent = transitContainer.querySelector<HTMLElement>(".content");
+
+    if (transitContent && transitPlaceholder) {
+        const transitWidget = new TransitWidget(transitContainer);
+        new TransitWidgetController(transitWidget);
     }
 
     

@@ -3,6 +3,7 @@ import type { Request, Response } from 'express';
 import { Result} from '@dashboard/shared';
 import { ValidatingFetcher } from '@dashboard/shared';
 import { transitStopListSchema, originalStopsData } from './transitDataSchemas.js';
+import { APITransitStopResponse } from '@dashboard/shared';
 const BASE_URL = "https://api.digitransit.fi"
 const ROUTE_API_VERSION = "v2"
 const SUB_API_VERSION = "v1"
@@ -12,6 +13,7 @@ TRANSIT_API_URL.searchParams.append("digitransit-subscription-key", NYSSE_KEY);
 import * as z from "zod";
 const MS_IN_24_HOURS = 24 * 60 * 60 * 1000;
 
+type FrontendTransitStopList = z.infer<typeof APITransitStopResponse>;
 type StopsData = z.infer<typeof transitStopListSchema>;
 
 /** In-memory cache for transit data */
@@ -67,6 +69,54 @@ async function getAllStops(req: Request, res: Response): Promise<void> {
     }
     res.status(200).json(result.data);
 }
+
+async function getStopsMatchingPattern(req: Request, res: Response): Promise<void> {
+    const pattern = req.query.pattern ? req.query.pattern.toString() : "";
+    const result = await getStopsMatchingPatternData(pattern);
+
+    if (result.error || !result.data) {
+        res.status(500).send(`Error fetching stops data: ${result.error}`);
+        return;
+    }
+
+    res.status(200).json(result.data);
+}
+
+// TODO: MAKE ENDPOINTS FOR TAMPERE AND ALL STOPS
+// AND MAKE IT SUPPORT QUERY PARAMETER FOR FILTERING STOPS BY NAME
+
+/**
+ * Get (for now) Tampere stops matching the given pattern
+ * @param pattern String pattern to match stop names against
+ * @returns A list of stops whose names match the pattern
+ */
+async function getStopsMatchingPatternData(pattern: string): Promise<Result<FrontendTransitStopList>> {
+    const allStopsResult = await getTreStopsData();
+    if (allStopsResult.error || !allStopsResult.data) {
+        return {error: allStopsResult.error, data: null};
+    }
+
+    // If pattern is empty, return all stops
+    if (pattern.trim() === "") {
+        return {data: allStopsResult.data, error: null};
+    }
+
+    const patternLower = pattern.toLowerCase();
+    const matchingStops = allStopsResult.data.filter(stop => 
+        stop.name.toLowerCase().startsWith(patternLower)
+    );
+
+    // Pick name, id, gtfsId only for frontend
+    // Because validation has been done, all the fields must exist
+    const frontendStops: FrontendTransitStopList = matchingStops.map(stop => ({
+        name: stop.name,
+        id: stop.id,
+        gtfsId: stop.gtfsId
+    }));
+
+    return {data: frontendStops, error: null};
+}
+
 
 async function getTreStopsData(): Promise<Result<StopsData>> {
     const cachedData = transitCache.getTreStopsData();
@@ -133,4 +183,4 @@ function filterStopsForTampere(stops: StopsData): StopsData {
     return stops.filter(stop => stop.gtfsId.toLowerCase().includes("tampere"));
 }
 
-export { getStopsTre, getAllStops };
+export { getStopsTre, getAllStops, getStopsMatchingPattern };
